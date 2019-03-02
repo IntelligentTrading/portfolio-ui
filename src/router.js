@@ -1,13 +1,35 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
+import Auth from "./views/Auth.vue";
+import Forgot from "./views/Forgot.vue";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: "/",
+      redirect: "/auth"
+    },
+    {
+      path: "/auth",
+      name: "auth",
+      component: Auth
+    },
+    {
+      path: "/forgot",
+      name: "forgot",
+      component: Forgot
+    },
+    {
+      path: "/auth/reset/:magicLinkToken",
+      name: "reset",
+      component: Auth,
+      props: true
+    },
+    {
+      path: "/home",
       name: "home",
       component: Home
     },
@@ -22,3 +44,5 @@ export default new Router({
     }
   ]
 });
+
+export default router;
