@@ -3,6 +3,8 @@ import Router from "vue-router";
 import Home from "./views/Home.vue";
 import Auth from "./views/Auth.vue";
 import Forgot from "./views/Forgot.vue";
+import Portfolio from "./components/home/Portfolio";
+import Exchange from "./components/home/Exchange";
 
 Vue.use(Router);
 
@@ -31,7 +33,12 @@ const router = new Router({
     {
       path: "/home",
       name: "home",
-      component: Home
+      component: Home,
+      redirect: "/home/portfolio",
+      children: [
+        { path: "portfolio", component: Portfolio },
+        { path: "exchange", component: Exchange }
+      ]
     },
     {
       path: "/about",

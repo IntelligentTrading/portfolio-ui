@@ -6,7 +6,7 @@
 
 <style>
 #app {
-  font-family: "Roboto";
+  font-family: "Lato";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

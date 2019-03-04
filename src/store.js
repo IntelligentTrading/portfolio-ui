@@ -5,11 +5,15 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    user: {}
+    user: {},
+    totalBalance: 0
   },
   mutations: {
     setUser(state, user) {
       state.user = user;
+    },
+    setTotalBalance(state, balance) {
+      state.totalBalance = balance;
     }
   },
   actions: {}
