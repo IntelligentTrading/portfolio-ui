@@ -1,5 +1,5 @@
 <template>
-  <el-card style="height:150px">
+  <el-card style="height:150px;margin-bottom:10px">
     <el-row :gutter="24">
       <el-col :span="20" style="display:flex">
         <div class="symbol">{{allocation.coin}}</div>
@@ -10,7 +10,7 @@
       </el-col>
     </el-row>
     <el-row style="margin-top:10px; bottom:-50px">
-      <el-progress :percentage="allocation.portion * 100"></el-progress>
+      <el-progress :percentage="parseFloat((allocation.portion * 100).toFixed(2))"></el-progress>
     </el-row>
   </el-card>
 </template>
@@ -41,6 +41,10 @@ export default {
   font-weight: 200;
   margin-left: 10px;
   font-size: 20px;
+}
+
+.el-progress__text {
+  font-size: 12px !important;
 }
 </style>
 

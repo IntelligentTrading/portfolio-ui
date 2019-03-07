@@ -2,7 +2,13 @@
   <div style="height:500px">
     <el-row :gutter="24" style="height:100%;display:flex;justify-content:center">
       <el-col :span="7" class="portfolio-type-container">
-        <el-row class="portfolio-type">Conservative</el-row>
+        <el-row class="portfolio-type">Conservative
+          <font-awesome-icon
+            icon="check"
+            style="color:green"
+            v-show="this.portfolio === 'conservative'"
+          />
+        </el-row>
         <el-row class="portfolio-distribution">
           <vue-frappe
             id="cons"
@@ -20,12 +26,22 @@
           ></vue-frappe>
         </el-row>
         <el-row style="flex:1">
-          <el-button class="select-button" @click="setPortfolio('conservative')">Select</el-button>
+          <el-button
+            class="select-button"
+            :disabled="this.portfolio === 'conservative'"
+            @click="switchPortfolio('conservative')"
+          >Select</el-button>
         </el-row>
       </el-col>
 
       <el-col :span="7" class="portfolio-type-container">
-        <el-row class="portfolio-type">Moderately Aggressive</el-row>
+        <el-row class="portfolio-type">Moderately Aggressive
+          <font-awesome-icon
+            icon="check"
+            style="color:green"
+            v-show="this.portfolio === 'mod-aggressive'"
+          />
+        </el-row>
         <el-row class="portfolio-distribution">
           <vue-frappe
             id="mod"
@@ -43,11 +59,21 @@
           ></vue-frappe>
         </el-row>
         <el-row style="flex:1">
-          <el-button class="select-button" @click="setPortfolio('mod-aggressive')">Select</el-button>
+          <el-button
+            class="select-button"
+            :disabled="this.portfolio === 'mod-aggressive'"
+            @click="switchPortfolio('mod-aggressive')"
+          >Select</el-button>
         </el-row>
       </el-col>
       <el-col :span="7" class="portfolio-type-container">
-        <el-row class="portfolio-type">Aggressive</el-row>
+        <el-row class="portfolio-type">Aggressive
+          <font-awesome-icon
+            icon="check"
+            style="color:green"
+            v-show="this.portfolio === 'aggressive'"
+          />
+        </el-row>
         <el-row class="portfolio-distribution">
           <vue-frappe
             id="agg"
@@ -65,25 +91,47 @@
           ></vue-frappe>
         </el-row>
         <el-row style="flex:1">
-          <el-button class="select-button" @click="setPortfolio('aggressive')">Select</el-button>
+          <el-button
+            class="select-button"
+            :disabled="this.portfolio === 'aggressive'"
+            @click="switchPortfolio('aggressive')"
+          >Select</el-button>
         </el-row>
       </el-col>
     </el-row>
   </div>
 </template>
 
-<<script>
+<script>
+import api from "../../api/client";
+import { mapMutations, mapState } from "vuex";
+
 export default {
-  methods:{
-    setPortfolio:function(type){
-      this.$confirm(`This will automatically change your holdings to the selected portfolio. Continue?`, 'Portfolio selection', {
-          confirmButtonText: 'OK',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        })
+  computed: {
+    ...mapState(["portfolio"])
+  },
+  methods: {
+    ...mapMutations(["setPortfolio"]),
+    switchPortfolio: function(packLabel) {
+      this.$confirm(
+        `This will automatically change your holdings to the selected portfolio. Continue?`,
+        "Portfolio selection",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning"
+        }
+      ).then(() => {
+        return api
+          .changePack(localStorage["userId"], packLabel)
+          .then(result => {
+            this.setPortfolio(packLabel);
+            this.$message.success(result.data);
+          });
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -110,6 +158,9 @@ export default {
 
 .select-button {
   width: 200px;
+  background: cornflowerblue;
+  color: white;
+  border: 0px;
 }
 .frappe-chart .chart-legend {
   display: none;

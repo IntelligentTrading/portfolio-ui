@@ -5,11 +5,13 @@
       <portfolio-choices></portfolio-choices>
     </el-dialog>
     <el-row :gutter="24">
-      <el-col :span="20" style="text-align:left">
-        <label class="portfolio-strategy">Conservative Portfolio</label>
+      <el-col :span="12" style="text-align:left">
+        <label class="portfolio-strategy">{{this.portfolioLabel}}</label>
       </el-col>
-      <el-col :span="4" style="text-align:right">
-        <el-button size="mini" type="primary" @click="showPortfolios = true">Change</el-button>
+      <el-col :span="12" style="text-align:right">
+        <el-button type="text" icon="el-icon-setting" @click="showPortfolios = true">CHANGE</el-button>
+        <el-button type="text" icon="el-icon-menu"></el-button>
+        <el-button type="text" icon="el-icon-search"></el-button>
       </el-col>
     </el-row>
     <el-row id="allocations-container">
@@ -23,55 +25,54 @@
   </div>
 </template>
 <script>
-import api from "../../api/client";
-import { mapMutations } from "vuex";
 import Allocation from "./Allocation";
 import mhelper from "../../util/mathHelper";
 import PortfolioChoices from "./PortfolioChoices";
+import { mapState } from "vuex";
 
 export default {
   data() {
     return {
-      distribution: [],
       showPortfolios: false
     };
   },
-  methods: {
-    ...mapMutations(["setTotalBalance"]),
-    loadDistribution: function() {
-      return api
-        .portfolio(localStorage.getItem("userId"))
-        .then(distribution => {
-          this.distribution = distribution.data;
-        });
-    }
-  },
-  mounted() {
-    this.loadDistribution();
-  },
   computed: {
+    ...mapState(["distribution", "totalBalance", "portfolio"]),
     mergedDistributions: function() {
       if (this.distribution.length == 0) return [];
 
-      let totalAmount = this.distribution.reduce((total, current) => {
-        return total.data.value + current.data.value;
-      });
-      let mergedDistro = { total: totalAmount, allocations: [] };
-      this.distribution.forEach(exchangeDistribution => {
-        exchangeDistribution.data.allocations.forEach(allocation => {
-          allocation.portion = mhelper.down(
-            (allocation.portion * exchangeDistribution.data.value) /
-              totalAmount,
-            2
-          );
-          mergedDistro.allocations.push(allocation);
+      let allocationsWithKey = {};
+      let mergedDistro = { total: this.totalBalance, allocations: [] };
+      this.distribution
+        .filter(exchangeDistribution => exchangeDistribution.data != null)
+        .forEach(exchangeDistribution => {
+          exchangeDistribution.data.allocations.forEach(allocation => {
+            allocation.portion = mhelper.down(
+              (allocation.portion * exchangeDistribution.data.value) /
+                this.totalBalance,
+              4
+            );
+            if (allocationsWithKey[allocation.coin]) {
+              allocationsWithKey[allocation.coin].portion += allocation.portion;
+              allocationsWithKey[allocation.coin].amount += allocation.amount;
+            } else {
+              allocationsWithKey[allocation.coin] = allocation;
+            }
+          });
         });
+
+      Object.getOwnPropertyNames(allocationsWithKey).forEach(p => {
+        mergedDistro.allocations.push(allocationsWithKey[p]);
       });
-      this.setTotalBalance(totalAmount);
       mergedDistro.allocations.sort((a, b) => {
         return b.portion - a.portion;
       });
       return mergedDistro;
+    },
+    portfolioLabel: function() {
+      const labels = ["Conservative", "Moderately Aggressive", "Aggressive"];
+      const dblabels = ["conservative", "mod-aggressive", "aggressive"];
+      return labels[dblabels.indexOf(this.portfolio)];
     }
   },
   components: { Allocation, PortfolioChoices }
@@ -95,14 +96,14 @@ export default {
   grid-column-gap: 10px;
   padding-top: 20px;
 }
+
 #allocations-container > .el-card:first-child {
   grid-column-start: 1;
 }
 
-.dialog-title {
-  font-size: 24px;
-  color: cornflowerblue;
-  font-weight: 600;
+.search-coin {
+  width: 180px;
+  margin-left: 20px;
 }
 </style>
 

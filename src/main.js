@@ -10,10 +10,12 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
   faBalanceScale,
   faSyncAlt,
-  faSignOutAlt
+  faSignOutAlt,
+  faCheck,
+  faKey
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faBalanceScale, faSyncAlt, faSignOutAlt);
+library.add(faBalanceScale, faSyncAlt, faSignOutAlt, faCheck, faKey);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 Vue.config.productionTip = false;

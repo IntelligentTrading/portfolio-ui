@@ -7,7 +7,7 @@
         height="36"
         src="https://intelligenttrading.org/wp-content/themes/intelligent-trading/assets/img/icons/apple-touch-icon-72x72.png"
       >
-
+      <label class="email">{{this.user.email}}</label>
       <el-button class="logout-button">Logout
         <font-awesome-icon icon="sign-out-alt"/>
       </el-button>
@@ -17,21 +17,27 @@
         <el-row>
           <div style="display:flex;flex-direction:column">
             <el-row :gutter="24">
-              <el-col :span="20" style="text-align:left">
+              <el-col :span="18" style="text-align:left">
                 <label class="balance">
                   <span style="font-size:21px">BTC</span>
                   {{this.totalBalance}}
                 </label>
               </el-col>
-              <el-col :span="4" style="text-align:right">
+              <el-col :span="6" class="action-buttons-container">
                 <el-tooltip placement="bottom" effect="light">
                   <div slot="content">
                     <span style="font-size:18px;font-family:Lato">Refresh</span>
                   </div>
-                  <el-button circle class="action-button">
-                    <font-awesome-icon icon="sync-alt"/>
+                  <el-button
+                    circle
+                    class="action-button"
+                    @click="refreshPortfolio"
+                    :loading="this.refreshingPortfolio"
+                  >
+                    <font-awesome-icon icon="sync-alt" v-show="!this.refreshingPortfolio"/>
                   </el-button>
                 </el-tooltip>
+
                 <el-tooltip placement="bottom" effect="light">
                   <div slot="content">
                     <span style="font-size:18px;font-family:Lato">Rebalance</span>
@@ -43,8 +49,18 @@
               </el-col>
             </el-row>
             <label class="balance-text">Total amount for all the linked exchanges</label>
-
-            <el-menu style="margin-top:20px" default-active="1" mode="horizontal">
+            <el-alert
+              style="margin-top:10px"
+              :title="this.error"
+              v-show="this.error != ''"
+              type="error"
+              :closable="false"
+            ></el-alert>
+            <el-menu
+              style="margin-top:20px"
+              :default-active="this.currentTabIndex"
+              mode="horizontal"
+            >
               <el-menu-item index="1" @click="to('/home/portfolio')">Portfolio</el-menu-item>
               <el-menu-item index="2" @click="to('/home/exchange')">Exchange</el-menu-item>
             </el-menu>
@@ -58,18 +74,55 @@
 
 <script>
 // @ is an alias to /src
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
+import api from "../api/client";
 
 export default {
   name: "home",
+  data() {
+    return {
+      refreshingPortfolio: false,
+      error: ""
+    };
+  },
   components: {},
   methods: {
+    ...mapMutations(["setUser", "setDistribution"]),
     to: function(url) {
       this.$router.push(url);
+    },
+    reloadUser: function() {
+      return api.user(localStorage.getItem("userId")).then(user => {
+        this.setUser(user.data);
+        if (this.user.exchanges.length == 0) this.error = "Set an exchange!";
+        else if (this.user.portfolio.packs.length == 0)
+          this.error = "Set a portfolio strategy!";
+        else this.error = "";
+      });
+    },
+    refreshPortfolio: function() {
+      this.refreshingPortfolio = true;
+      return api
+        .portfolio(localStorage.getItem("userId"))
+        .then(distribution => {
+          this.setDistribution(distribution.data);
+          this.refreshingPortfolio = false;
+          this.$message.success("Portfolio refreshed.");
+        })
+        .catch(() => {
+          this.refreshingPortfolio = false;
+        });
     }
   },
+  mounted() {
+    if (!this.user.email) this.reloadUser();
+    this.refreshPortfolio();
+  },
   computed: {
-    ...mapState(["totalBalance"])
+    ...mapState(["totalBalance", "user", "portfolio"]),
+    currentTabIndex() {
+      return window.location.hash.includes("exchange") ? "2" : "1";
+    }
   }
 };
 </script>
@@ -122,6 +175,35 @@ export default {
   background: #cf78a2;
   border: 0px;
   color: white !important;
+}
+
+.action-buttons-container {
+  text-align: right;
+  padding: 0px !important;
+}
+
+.el-message-box {
+  font-family: Lato;
+}
+
+.email {
+  right: 180px;
+  position: absolute;
+  top: 20px;
+  font-family: Lato;
+}
+
+.el-dialog__header {
+  text-align: -webkit-center;
+}
+
+.dialog-title {
+  font-size: 18px;
+  width: 300px;
+  border-bottom: 2px solid;
+  border-color: cornflowerblue;
+  color: cornflowerblue;
+  padding-bottom: 20px;
 }
 </style>
 

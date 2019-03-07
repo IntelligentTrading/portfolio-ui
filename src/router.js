@@ -4,7 +4,7 @@ import Home from "./views/Home.vue";
 import Auth from "./views/Auth.vue";
 import Forgot from "./views/Forgot.vue";
 import Portfolio from "./components/home/Portfolio";
-import Exchange from "./components/home/Exchange";
+import Exchanges from "./components/home/Exchanges";
 
 Vue.use(Router);
 
@@ -37,7 +37,7 @@ const router = new Router({
       redirect: "/home/portfolio",
       children: [
         { path: "portfolio", component: Portfolio },
-        { path: "exchange", component: Exchange }
+        { path: "exchange", component: Exchanges }
       ]
     },
     {
