@@ -1,2 +1,3 @@
-const bus = new Vue({});
-export default bus;
+import Vue from "vue";
+
+export const EventBus = new Vue();

@@ -33,11 +33,7 @@
           @click="this.testConnection"
           :loading="this.isTesting"
         >TEST</el-button>
-        <el-button
-          class="dialog-confirm-button"
-          :disabled="!this.isValidExchange"
-          @click="addExchange"
-        >SAVE</el-button>
+        <el-button class="dialog-confirm-button" :disabled="!this.isValidExchange" @click="add">SAVE</el-button>
       </div>
       <label
         style="margin:10px"
@@ -48,7 +44,7 @@
   </div>
 </template>
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import api from "../../../api/client";
 
 export default {
@@ -88,26 +84,26 @@ export default {
   },
   methods: {
     ...mapMutations(["setExchanges"]),
+    ...mapActions(["addExchange"]),
     showPassword: function(field) {
       this[field + "_field_type"] =
         this[field + "_field_type"] == "text" ? "password" : "text";
     },
     testConnection: function() {
       this.isTesting = true;
-      return api
-        .testExchangeConnection(this.selectedExchange)
+      return api.exchange
+        .testConnection(this.selectedExchange)
         .then(testResult => {
           this.isTesting = false;
           this.dialogMessage.success = testResult.success;
           this.dialogMessage.text = testResult.message;
         });
     },
-    addExchange: function() {
-      return api
-        .addExchange(localStorage["userId"], this.selectedExchange)
-        .then(exchanges => {
-          this.user.exchanges = exchanges.data;
-        });
+    add: function() {
+      return this.addExchange({
+        userId: localStorage["userId"],
+        exchange: this.selectedExchange
+      }).then(() => this.$emit("added"));
     }
   }
 };

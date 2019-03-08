@@ -8,7 +8,7 @@
         src="https://intelligenttrading.org/wp-content/themes/intelligent-trading/assets/img/icons/apple-touch-icon-72x72.png"
       >
       <label class="email">{{this.user.email}}</label>
-      <el-button class="logout-button">Logout
+      <el-button class="logout-button" @click="logout">Logout
         <font-awesome-icon icon="sign-out-alt"/>
       </el-button>
     </el-row>
@@ -31,7 +31,7 @@
                   <el-button
                     circle
                     class="action-button"
-                    @click="refreshPortfolio"
+                    @click="refresh"
                     :loading="this.refreshingPortfolio"
                   >
                     <font-awesome-icon icon="sync-alt" v-show="!this.refreshingPortfolio"/>
@@ -51,8 +51,8 @@
             <label class="balance-text">Total amount for all the linked exchanges</label>
             <el-alert
               style="margin-top:10px"
-              :title="this.error"
-              v-show="this.error != ''"
+              :title="'Your configuration is not complete, check you exchange accounts and portfolio settings.'"
+              v-show="this.user.exchanges == null || this.user.exchanges.length == 0"
               type="error"
               :closable="false"
             ></el-alert>
@@ -74,7 +74,8 @@
 
 <script>
 // @ is an alias to /src
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
+import { EventBus } from "../util/eventBus.js";
 import api from "../api/client";
 
 export default {
@@ -82,12 +83,14 @@ export default {
   data() {
     return {
       refreshingPortfolio: false,
-      error: ""
+      error: "",
+      currentTabIndex: "1"
     };
   },
   components: {},
   methods: {
     ...mapMutations(["setUser", "setDistribution"]),
+    ...mapActions(["refreshPortfolio"]),
     to: function(url) {
       this.$router.push(url);
     },
@@ -100,29 +103,36 @@ export default {
         else this.error = "";
       });
     },
-    refreshPortfolio: function() {
+    refresh: function() {
       this.refreshingPortfolio = true;
-      return api
-        .portfolio(localStorage.getItem("userId"))
-        .then(distribution => {
-          this.setDistribution(distribution.data);
+
+      return this.refreshPortfolio(localStorage["userId"])
+        .then(() => {
           this.refreshingPortfolio = false;
           this.$message.success("Portfolio refreshed.");
         })
         .catch(() => {
           this.refreshingPortfolio = false;
         });
+    },
+    logout: function() {
+      localStorage.clear();
+      this.$router.push("/");
     }
   },
   mounted() {
+    EventBus.$on("hashchange", args => {
+      if (args[0].path.includes("home")) {
+        this.currentTabIndex = args[0].path.split("/")[2].includes("exchange")
+          ? "2"
+          : "1";
+      }
+    });
     if (!this.user.email) this.reloadUser();
-    this.refreshPortfolio();
+    this.refresh();
   },
   computed: {
-    ...mapState(["totalBalance", "user", "portfolio"]),
-    currentTabIndex() {
-      return window.location.hash.includes("exchange") ? "2" : "1";
-    }
+    ...mapState(["totalBalance", "user", "portfolio"])
   }
 };
 </script>

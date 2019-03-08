@@ -2,7 +2,7 @@
   <div id="exchanges-container">
     <el-dialog :visible.sync="showAddNewExchange" width="40%">
       <div class="dialog-title" slot="title">Add Exchange Account</div>
-      <add></add>
+      <add v-on:added="showAddNewExchange=false"></add>
     </el-dialog>
     <el-row :gutter="24">
       <el-col :span="20" style="text-align:left;font-family:lato;font-size:21px">
@@ -26,16 +26,16 @@ import Add from "./exchanges/Add";
 import { mapState } from "vuex";
 
 export default {
+  props: ["startWithAdd"],
   data() {
     return {
-      showAddNewExchange: false
+      showAddNewExchange: this.$props.startWithAdd
     };
   },
   components: { Exchange, Add },
   computed: {
     ...mapState(["user", "supportedExchanges"]),
     linkedExchanges: function() {
-      this.showAddNewExchange = false;
       return this.user.exchanges;
     }
   }

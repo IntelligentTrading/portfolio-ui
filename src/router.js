@@ -5,6 +5,7 @@ import Auth from "./views/Auth.vue";
 import Forgot from "./views/Forgot.vue";
 import Portfolio from "./components/home/Portfolio";
 import Exchanges from "./components/home/Exchanges";
+import { EventBus } from "./util/eventBus";
 
 Vue.use(Router);
 
@@ -37,7 +38,12 @@ const router = new Router({
       redirect: "/home/portfolio",
       children: [
         { path: "portfolio", component: Portfolio },
-        { path: "exchange", component: Exchanges }
+        {
+          path: "exchange",
+          component: Exchanges,
+          name: "exchange",
+          props: true
+        }
       ]
     },
     {
@@ -50,6 +56,10 @@ const router = new Router({
         import(/* webpackChunkName: "about" */ "./views/About.vue")
     }
   ]
+});
+
+router.afterEach((to, from) => {
+  EventBus.$emit("hashchange", [to, from]);
 });
 
 export default router;

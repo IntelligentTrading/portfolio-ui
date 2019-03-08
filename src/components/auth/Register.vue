@@ -81,7 +81,7 @@ export default {
           this.isLoading = false;
           this.$message.success(`User ${this.registerForm.email} created.`);
           setTimeout(() => {
-            this.$router.push("/auth");
+            this.$router.push("/auth"); // send confirmation email
           }, 1000);
         })
         .catch(() => {

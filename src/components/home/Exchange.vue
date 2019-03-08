@@ -18,7 +18,7 @@
         <el-button type="text" @click="showEditDialog = true">Edit</el-button>
         <el-dialog :visible.sync="showEditDialog" width="40%">
           <div class="dialog-title" slot="title">{{'Edit '+this.exchangeName+' Account'}}</div>
-          <edit :exchangeData="this.$props.exchangeData"></edit>
+          <edit :exchangeData="this.$props.exchangeData" v-on:updated="showEditDialog = false"></edit>
         </el-dialog>
       </el-col>
     </el-row>

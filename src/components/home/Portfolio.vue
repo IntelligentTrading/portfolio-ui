@@ -21,7 +21,12 @@
         :allocation="item"
       ></allocation>
     </el-row>
-    <label v-show="distribution.length == 0">No allocations</label>
+    <label v-show="this.distribution.length == 0">No allocations, you must
+      <el-button
+        type="text"
+        @click="$router.push({name:'exchange', params:{startWithAdd:true}})"
+      >add an exchange</el-button>.
+    </label>
   </div>
 </template>
 <script>

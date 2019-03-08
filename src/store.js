@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import api from "./api/client";
 
 Vue.use(Vuex);
 
@@ -50,5 +51,29 @@ export default new Vuex.Store({
       state.user.exchanges = exchanges;
     }
   },
-  actions: {}
+  actions: {
+    addExchange: async function(ctx, { userId, exchange }) {
+      return api.exchange.add(userId, exchange).then(result => {
+        ctx.commit("setExchanges", result.data);
+        return ctx.dispatch("refreshPortfolio", userId);
+      });
+    },
+    editExchange: async function(ctx, { userId, exchange }) {
+      return api.exchange.edit(userId, exchange).then(result => {
+        ctx.commit("setExchanges", result.data);
+        return ctx.dispatch("refreshPortfolio", userId);
+      });
+    },
+    deleteExchange: async function(ctx, { userId, exchange }) {
+      return api.exchange.delete(userId, exchange).then(result => {
+        ctx.commit("setExchanges", result.data);
+        return ctx.dispatch("refreshPortfolio", userId);
+      });
+    },
+    refreshPortfolio: async function(ctx, userId) {
+      return api.portfolio(userId).then(distribution => {
+        return ctx.commit("setDistribution", distribution.data);
+      });
+    }
+  }
 });

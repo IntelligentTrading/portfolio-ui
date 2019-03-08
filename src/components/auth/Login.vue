@@ -60,7 +60,9 @@ export default {
         })
         .catch(err => {
           this.isLoading = false;
-          this.$message.error(err);
+          if (err.message.includes("401"))
+            this.$message.error("Wrong username and/or password");
+          else this.$message.error(err);
         });
     },
     forgotPassword: function() {

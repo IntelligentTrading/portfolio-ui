@@ -30,7 +30,7 @@
         <el-button
           class="dialog-confirm-button"
           :disabled="!this.isValidExchange"
-          @click="addExchange"
+          @click="edit"
         >RESET</el-button>
       </div>
       <label
@@ -39,13 +39,13 @@
         v-show="this.dialogMessage.text != ''"
       >{{this.dialogMessage.text}}</label>
       <div class="delete-div">
-        <el-button class="dialog-delete-button" @click="deleteExchange">DELETE</el-button>
+        <el-button class="dialog-delete-button" @click="del">DELETE</el-button>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import api from "../../../api/client";
 
 export default {
@@ -68,17 +68,8 @@ export default {
   },
   computed: {
     ...mapState(["user", "supportedExchanges"]),
-    isAlreadyConfigured() {
-      if (!this.user || !this.user.exchanges) return false;
-      return this.user.exchanges.some(
-        ex =>
-          ex.label.toLowerCase() === this.selectedExchange.label.toLowerCase()
-      );
-    },
     isValidExchange() {
       return (
-        !this.isAlreadyConfigured &&
-        this.selectedExchange.label != "" &&
         this.selectedExchange.credentials.api_key != "" &&
         this.selectedExchange.credentials.secret != ""
       );
@@ -86,26 +77,47 @@ export default {
   },
   methods: {
     ...mapMutations(["setExchanges"]),
+    ...mapActions(["editExchange", "deleteExchange", "refreshPortfolio"]),
     showPassword: function(field) {
       this[field + "_field_type"] =
         this[field + "_field_type"] == "text" ? "password" : "text";
     },
     testConnection: function() {
       this.isTesting = true;
-      return api
-        .testExchangeConnection(this.selectedExchange)
+      return api.exchange
+        .testConnection(this.selectedExchange)
         .then(testResult => {
           this.isTesting = false;
           this.dialogMessage.success = testResult.success;
           this.dialogMessage.text = testResult.message;
         });
     },
-    addExchange: function() {
-      return api
-        .addExchange(localStorage["userId"], this.selectedExchange)
-        .then(exchanges => {
-          this.user.exchanges = exchanges.data;
-        });
+    edit: function() {
+      return this.editExchange({
+        userId: localStorage["userId"],
+        exchange: this.selectedExchange
+      }).then(() => {
+        this.$emit("updated");
+      });
+    },
+    del: function() {
+      return this.$confirm(
+        "This will unlink your exchange account with the portfolio. Do you want to proceed?",
+        "Exchange account deletion",
+        {
+          confirmButtonText: "Ok",
+          cancelButtonText: "Cancel"
+        }
+      )
+        .then(() => {
+          this.deleteExchange({
+            userId: localStorage["userId"],
+            exchange: this.selectedExchange
+          }).then(() => {
+            this.$emit("updated");
+          });
+        })
+        .catch(err => this.$emit("cancel"));
     }
   }
 };
