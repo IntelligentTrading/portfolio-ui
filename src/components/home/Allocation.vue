@@ -37,7 +37,7 @@ export default {
 }
 
 .amount {
-  font-family: "Helvetica Neue";
+  font-family: "Montserrat";
   font-weight: 200;
   margin-left: 10px;
   font-size: 20px;

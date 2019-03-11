@@ -30,6 +30,7 @@
         <el-button
           class="dialog-confirm-button"
           :disabled="!this.isValidExchange"
+          :loading="this.isSaving"
           @click="edit"
         >RESET</el-button>
       </div>
@@ -39,7 +40,7 @@
         v-show="this.dialogMessage.text != ''"
       >{{this.dialogMessage.text}}</label>
       <div class="delete-div">
-        <el-button class="dialog-delete-button" @click="del">DELETE</el-button>
+        <el-button class="dialog-delete-button" @click="del" :loading="this.isDeleting">DELETE</el-button>
       </div>
     </div>
   </div>
@@ -60,6 +61,8 @@ export default {
         credentials: { api_key: "", secret: "" }
       },
       isTesting: false,
+      isSaving: false,
+      isDeleting: false,
       dialogMessage: {
         text: "",
         success: false
@@ -93,10 +96,12 @@ export default {
         });
     },
     edit: function() {
+      this.isSaving = true;
       return this.editExchange({
         userId: localStorage["userId"],
         exchange: this.selectedExchange
       }).then(() => {
+        this.isSaving = false;
         this.$emit("updated");
       });
     },
@@ -110,10 +115,12 @@ export default {
         }
       )
         .then(() => {
+          this.isDeleting = true;
           this.deleteExchange({
             userId: localStorage["userId"],
             exchange: this.selectedExchange
           }).then(() => {
+            this.isDeleting = false;
             this.$emit("updated");
           });
         })
