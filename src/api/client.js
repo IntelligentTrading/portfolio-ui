@@ -1,48 +1,55 @@
-import axios from "axios";
-import crypto from "crypto";
+import axios from 'axios'
+import crypto from 'crypto'
 
 const axiosInstance = axios.create({
   timeout: 10000,
   params: {} // do not remove this, its added to add params later in the config
-});
-const apiurl = process.env.VUE_APP_PORTFOLIO_API;
+})
+const apiurl = process.env.VUE_APP_PORTFOLIO_API
 
 const client = {
   register: (email, password) => {
     return axiosInstance.post(`${apiurl}/auth/register`, {
       email: email,
       password: password
-    });
+    })
   },
   login: (email, password) => {
     return axiosInstance.post(`${apiurl}/auth/login`, {
       email: email,
       password: password
-    });
+    })
   },
   forgot: email => {
     return axiosInstance.post(`${apiurl}/auth/forgot`, {
       email: email
-    });
+    })
   },
   reset: (magicLinkToken, password) => {
     return axiosInstance.put(`${apiurl}/auth/reset/${magicLinkToken}`, {
       newPassword: password
-    });
+    })
   },
   user: id => {
     return axiosInstance
       .get(`${apiurl}/users/${id}`, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
       })
-      .catch(err => handleUnauthorized(err));
+      .catch(err => handleUnauthorized(err))
   },
   portfolio: id => {
     return axiosInstance
       .get(`${apiurl}/users/${id}/portfolio`, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
       })
-      .catch(err => handleUnauthorized(err));
+      .catch(err => handleUnauthorized(err))
+  },
+  rebalance: id => {
+    return axiosInstance
+      .put(`${apiurl}/users/${id}/rebalance`, null, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+      })
+      .catch(err => handleUnauthorized(err))
   },
   changePack: (id, label) => {
     return axiosInstance
@@ -52,66 +59,69 @@ const client = {
           label: label
         },
         {
-          headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
         }
       )
       .catch(err => {
-        return handleUnauthorized(err);
-      });
+        return handleUnauthorized(err)
+      })
   },
   exchange: {
-    testConnection: exchange => {
-      //api to add
+    testConnection: () => {
+      // api to add
+
+      // exchange
       return Promise.resolve({
         success: true,
-        message: "Connection test successful"
-      });
+        message: 'Connection test successful'
+      })
     },
     add: (id, exchange) => {
-      return exchangeOperation(id, exchange, "POST");
+      return exchangeOperation(id, exchange, 'POST')
     },
     edit: (id, exchange) => {
-      return exchangeOperation(id, exchange, "PUT");
+      return exchangeOperation(id, exchange, 'PUT')
     },
     delete: (id, exchange) => {
-      return exchangeOperation(id, exchange, "DELETE");
+      return exchangeOperation(id, exchange, 'DELETE')
     }
   }
-};
-
-export default client;
-
-function handleUnauthorized(err) {
-  if (err.response.status === 401) {
-    global.vm.$emit("401");
-  }
-  return err;
 }
 
-function exchangeOperation(id, exchange, method) {
+export default client
+
+function handleUnauthorized (err) {
+  if (err.response.status === 401) {
+    global.vm.$emit('401')
+  }
+  return err
+}
+
+function exchangeOperation (id, exchange, method) {
   exchange.credentials.preview =
     exchange.credentials.api_key.slice(0, 2) +
-    "***" +
-    exchange.credentials.api_key.slice(exchange.credentials.api_key.length - 2);
+    '***' +
+    exchange.credentials.api_key.slice(exchange.credentials.api_key.length - 2)
   exchange.credentials.api_key = crypto
     .publicEncrypt(
-      localStorage["pubKey"],
+      localStorage['pubKey'],
       Buffer.from(exchange.credentials.api_key)
     )
-    .toString("base64");
+    .toString('base64')
+
   exchange.credentials.secret = crypto
     .publicEncrypt(
-      localStorage["pubKey"],
+      localStorage['pubKey'],
       Buffer.from(exchange.credentials.secret)
     )
-    .toString("base64");
+    .toString('base64')
 
   return axiosInstance({
     method: method,
     url: `${apiurl}/users/${id}/exchanges/`,
     data: exchange,
-    headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
   }).catch(err => {
-    return handleUnauthorized(err);
-  });
+    return handleUnauthorized(err)
+  })
 }

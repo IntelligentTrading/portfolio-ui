@@ -44,16 +44,21 @@ export default {
   computed: {
     ...mapState(["distribution", "totalBalance", "portfolio"]),
     mergedDistributions: function() {
-      if (this.distribution.length == 0) return [];
+      if (Object.getOwnPropertyNames(this.distribution).length == 0) return [];
 
       let allocationsWithKey = {};
       let mergedDistro = { total: this.totalBalance, allocations: [] };
-      this.distribution
-        .filter(exchangeDistribution => exchangeDistribution.data != null)
-        .forEach(exchangeDistribution => {
-          exchangeDistribution.data.allocations.forEach(allocation => {
+      Object.getOwnPropertyNames(this.distribution).forEach(
+        exchangeDistribution => {
+          const currentExchangeDistribution = this.distribution[
+            exchangeDistribution
+          ];
+
+          if (currentExchangeDistribution.allocations == null) return [];
+
+          currentExchangeDistribution.allocations.forEach(allocation => {
             allocation.portion = mhelper.down(
-              (allocation.portion * exchangeDistribution.data.value) /
+              (allocation.portion * currentExchangeDistribution.value) /
                 this.totalBalance,
               4
             );
@@ -64,7 +69,8 @@ export default {
               allocationsWithKey[allocation.coin] = allocation;
             }
           });
-        });
+        }
+      );
 
       Object.getOwnPropertyNames(allocationsWithKey).forEach(p => {
         mergedDistro.allocations.push(allocationsWithKey[p]);

@@ -24,7 +24,7 @@ export default {
       return `https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@f3661dbd785a91bd2fc1da34750ce1dce2ac771b/svg/color/${this.$props.allocation.coin.toLowerCase()}.svg`;
     },
     tokens: function() {
-      return mh.down(this.$props.allocation.amount, 2);
+      return mh.down(this.$props.allocation.amount, 4);
     }
   }
 };

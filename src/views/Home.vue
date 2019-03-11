@@ -42,8 +42,13 @@
                   <div slot="content">
                     <span style="font-size:18px;font-family:Lato">Rebalance</span>
                   </div>
-                  <el-button circle class="action-button purple">
-                    <font-awesome-icon icon="balance-scale"/>
+                  <el-button
+                    circle
+                    class="action-button purple"
+                    :loading="this.rebalancing"
+                    @click="rebalance"
+                  >
+                    <font-awesome-icon icon="balance-scale" v-show="!this.rebalancing"/>
                   </el-button>
                 </el-tooltip>
               </el-col>
@@ -84,7 +89,8 @@ export default {
     return {
       refreshingPortfolio: false,
       error: "",
-      currentTabIndex: "1"
+      currentTabIndex: "1",
+      rebalancing: false
     };
   },
   components: {},
@@ -101,6 +107,14 @@ export default {
         else if (this.user.portfolio.packs.length == 0)
           this.error = "Set a portfolio strategy!";
         else this.error = "";
+      });
+    },
+    rebalance: function() {
+      console.log("rebalancing");
+      this.rebalancing = true;
+      return api.rebalance(localStorage["userId"]).then(result => {
+        console.log(result);
+        this.rebalancing = false;
       });
     },
     refresh: function() {

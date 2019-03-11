@@ -42,10 +42,8 @@ export default {
       return sUtil.toTitleCase(this.$props.exchangeData.label);
     },
     amount: function() {
-      const exchange = this.distribution.find(ex => {
-        return ex.exchange.toLowerCase() === this.exchangeName.toLowerCase();
-      });
-      if (exchange && exchange.data) return exchange.data.value;
+      const exchange = this.distribution[this.exchangeName.toLowerCase()];
+      if (exchange) return exchange.value;
       return 0;
     },
     exchangeIcon: function() {
