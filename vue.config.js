@@ -8,7 +8,7 @@ module.exports = {
           VUE_APP_PORTFOLIO_API: JSON.stringify(
             process.env.VUE_APP_PORTFOLIO_API
           ),
-          VUE_APP_SOCKET: JSON.stringify(process.env.ITT_SOCKET)
+          VUE_APP_SOCKET: JSON.stringify(process.env.VUE_APP_ITT_SOCKET)
         }
       })
     ]
