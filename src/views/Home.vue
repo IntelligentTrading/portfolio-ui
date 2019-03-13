@@ -20,8 +20,14 @@
               <el-col :span="18" style="text-align:left">
                 <label class="balance">
                   <span style="font-size:21px">BTC</span>
-                  {{this.totalBalance}}
+                  <span v-show="!this.refreshingPortfolio">{{this.totalBalance}}</span>
+                  <el-tag
+                    style="margin-left:20px;font-family:Lato"
+                    v-show="this.rebalancingStatus.status != null"
+                    :type="this.rebalancingStatus.type"
+                  >Rebalancing {{this.rebalancingStatus.status}}</el-tag>
                 </label>
+                <loader style="margin:10px" v-show="this.refreshingPortfolio"></loader>
               </el-col>
               <el-col :span="6" class="action-buttons-container">
                 <el-tooltip placement="bottom" effect="light">
@@ -82,6 +88,8 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 import { EventBus } from "../util/eventBus.js";
 import api from "../api/client";
+import Loader from "../components/others/Loader";
+import io from "socket.io-client";
 
 export default {
   name: "home",
@@ -90,10 +98,11 @@ export default {
       refreshingPortfolio: false,
       error: "",
       currentTabIndex: "1",
-      rebalancing: false
+      rebalancing: false,
+      rebalancingStatus: {}
     };
   },
-  components: {},
+  components: { Loader },
   methods: {
     ...mapMutations(["setUser", "setDistribution"]),
     ...mapActions(["refreshPortfolio"]),
@@ -110,12 +119,18 @@ export default {
       });
     },
     rebalance: function() {
-      console.log("rebalancing");
       this.rebalancing = true;
-      return api.rebalance(localStorage["userId"]).then(result => {
-        console.log(result);
-        this.rebalancing = false;
-      });
+      return api
+        .rebalance(localStorage["userId"])
+        .then(result => {
+          this.$message.success(result.data);
+          this.rebalancingStatus = extractRebalancingStatus(result.data);
+          this.rebalancing = false;
+        })
+        .catch(err => {
+          this.rebalancingStatus = { status: "Error", type: "danger" };
+          this.rebalancing = false;
+        });
     },
     refresh: function() {
       this.refreshingPortfolio = true;
@@ -135,6 +150,21 @@ export default {
     }
   },
   mounted() {
+    console.log(process.env.VUE_APP_SOCKET);
+    const socket = io(
+      `${process.env.VUE_APP_SOCKET}?user_id=${localStorage["userId"]}`
+    );
+    socket.on("connect", () => {
+      console.log("socket connected");
+    });
+
+    socket.on("message", payload => {
+      if (payload.type == "rebalancing") {
+        this.rebalancingStatus = extractRebalancingStatus(payload.data);
+      }
+    });
+
+    // navigation guard
     EventBus.$on("hashchange", args => {
       if (args[0].path.includes("home")) {
         this.currentTabIndex = args[0].path.split("/")[2].includes("exchange")
@@ -149,6 +179,15 @@ export default {
     ...mapState(["totalBalance", "user", "portfolio"])
   }
 };
+
+function extractRebalancingStatus(message) {
+  if (message.includes("queued")) return { status: "queued", type: "warning" };
+  else if (message.includes("complete"))
+    return { status: "complete", type: "success" };
+  else if (message.includes("progress"))
+    return { status: "progress", type: "info" };
+  else return {};
+}
 </script>
 
 <style>

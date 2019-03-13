@@ -37,6 +37,7 @@ export default {
 }
 
 .amount {
+  margin-top: 1px;
   font-family: "Montserrat";
   font-weight: 200;
   margin-left: 10px;
