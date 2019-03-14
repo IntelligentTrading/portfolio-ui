@@ -173,6 +173,10 @@ export default {
       }
     });
 
+    this.socket.on("heartbeat", () => {
+      console.log('♡')
+    });
+
     // navigation guard
     EventBus.$on("hashchange", args => {
       if (args[0].path.includes("home")) {
