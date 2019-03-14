@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="fields-container">
-      <el-select class="credentials" v-model="selectedExchange.label" placeholder="Select Exchange">
+      <el-select
+        class="credentials"
+        v-model="selectedExchange.label"
+        placeholder="Select Exchange"
+      >
         <el-option
           v-for="item in this.supportedExchanges"
           :key="item.label"
@@ -9,14 +13,20 @@
           :value="item.label"
         ></el-option>
       </el-select>
-      <label v-show="this.isAlreadyConfigured" style="color:red">This exchange is already linked!</label>
+      <label v-show="this.isAlreadyConfigured" style="color:red"
+        >This exchange is already linked!</label
+      >
       <el-input
         class="credentials"
         :type="api_key_field_type"
         placeholder="API KEY"
         v-model="selectedExchange.credentials.api_key"
       >
-        <i slot="suffix" @click="showPassword('api_key')" class="el-input__icon el-icon-view"></i>
+        <i
+          slot="suffix"
+          @click="showPassword('api_key')"
+          class="el-input__icon el-icon-view"
+        ></i>
       </el-input>
       <el-input
         class="credentials"
@@ -24,7 +34,11 @@
         placeholder="Secret"
         v-model="selectedExchange.credentials.secret"
       >
-        <i slot="suffix" @click="showPassword('secret')" class="el-input__icon el-icon-view"></i>
+        <i
+          slot="suffix"
+          @click="showPassword('secret')"
+          class="el-input__icon el-icon-view"
+        ></i>
       </el-input>
       <div style="display:flex;flex-direction:row;margin-top:10px">
         <el-button
@@ -32,14 +46,21 @@
           icon="el-icon-warning"
           @click="this.testConnection"
           :loading="this.isTesting"
-        >TEST</el-button>
-        <el-button class="dialog-confirm-button" :disabled="!this.isValidExchange" @click="add">SAVE</el-button>
+          >TEST</el-button
+        >
+        <el-button
+          class="dialog-confirm-button"
+          :disabled="!this.isValidExchange"
+          @click="add"
+          >SAVE</el-button
+        >
       </div>
       <label
         style="margin:10px"
-        :style="this.dialogMessage.success ? 'color:green': 'color:red'"
+        :style="this.dialogMessage.success ? 'color:green' : 'color:red'"
         v-show="this.dialogMessage.text != ''"
-      >{{this.dialogMessage.text}}</label>
+        >{{ this.dialogMessage.text }}</label
+      >
     </div>
   </div>
 </template>

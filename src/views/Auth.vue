@@ -5,32 +5,33 @@
       width="52"
       src="https://intelligenttrading.org/wp-content/themes/intelligent-trading/assets/img/icons/apple-touch-icon-72x72.png"
     >
-    <el-row :gutter="24">
-      <el-col class="login-form" :span="12">
-        <component
-          v-bind:is="activeAuthComponent"
-          v-bind="{ magicLinkToken: this.$props.magicLinkToken }"
-        ></component>
-        <label
-          v-show="authComponentsIdx % 2 == 0 && !this.$props.magicLinkToken"
-          @click="switchView"
-        >
-          Not a member?
-          <span class="clickable-label">
-            <u>Create an account.</u>
-          </span>
-        </label>
-        <label
-          v-show="authComponentsIdx % 2 == 1 && !this.$props.magicLinkToken"
-          @click="switchView"
-        >
-          Already a member?
-          <span class="clickable-label">
-            <u>Login.</u>
-          </span>
-        </label>
+    <el-row :gutter="24" class="login-container">
+      <el-col class="login-form" :span="24">
+        <div class="login-card-div">
+          <component
+            v-bind:is="activeAuthComponent"
+            v-bind="{ magicLinkToken: this.$props.magicLinkToken }"
+          ></component>
+          <label
+            v-show="authComponentsIdx % 2 == 0 && !this.$props.magicLinkToken"
+            @click="switchView"
+          >
+            Not a member?
+            <span class="clickable-label">
+              <u>Create an account.</u>
+            </span>
+          </label>
+          <label
+            v-show="authComponentsIdx % 2 == 1 && !this.$props.magicLinkToken"
+            @click="switchView"
+          >
+            Already a member?
+            <span class="clickable-label">
+              <u>Login.</u>
+            </span>
+          </label>
+        </div>
       </el-col>
-      <el-col :span="12" style="background:cornflowerblue;height:100vh"></el-col>
     </el-row>
   </div>
 </template>
@@ -68,14 +69,6 @@ export default {
 </script>
 
 <style>
-.login-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 10%;
-  justify-content: center;
-}
-
 .login-card {
   display: flex;
   flex-direction: column;
@@ -83,6 +76,19 @@ export default {
   padding: 30px;
   border-radius: 10px;
   background: white;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10%;
+  justify-content: center;
 }
 
 .auth-button {
@@ -114,5 +120,15 @@ export default {
 
 .el-input__inner {
   height: 50px !important;
+}
+
+.login-card-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+  padding: 30px 10px;
+  border-radius: 5px;
+  box-shadow: 0px 1px 15px 0px lightgrey;
 }
 </style>

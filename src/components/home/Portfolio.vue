@@ -6,10 +6,10 @@
     </el-dialog>
     <el-row :gutter="24">
       <el-col :span="12" style="text-align:left">
-        <label class="portfolio-strategy">{{this.portfolioLabel}}</label>
+        <label class="portfolio-strategy">{{ this.portfolioLabel }}</label>
+        <el-button type="text" icon="el-icon-setting" @click="showPortfolios = true">CHANGE</el-button>
       </el-col>
       <el-col :span="12" style="text-align:right">
-        <el-button type="text" icon="el-icon-setting" @click="showPortfolios = true">CHANGE</el-button>
         <el-button type="text" icon="el-icon-menu"></el-button>
         <el-button type="text" icon="el-icon-search"></el-button>
       </el-col>
@@ -24,7 +24,9 @@
     <label v-show="this.distribution.length == 0">No allocations, you must
       <el-button
         type="text"
-        @click="$router.push({name:'exchange', params:{startWithAdd:true}})"
+        @click="
+          $router.push({ name: 'exchange', params: { startWithAdd: true } })
+        "
       >add an exchange</el-button>.
     </label>
   </div>
@@ -90,7 +92,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .portfolio-container {
   margin-top: 20px;
@@ -99,6 +100,7 @@ export default {
 .portfolio-strategy {
   font-family: Lato;
   font-size: 21px;
+  margin-right: 10px;
 }
 
 #allocations-container {
@@ -117,4 +119,3 @@ export default {
   margin-left: 20px;
 }
 </style>
-

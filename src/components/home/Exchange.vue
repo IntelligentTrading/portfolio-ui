@@ -3,7 +3,7 @@
     <el-row :gutter="24" style="flex-grow:1">
       <el-col :span="20" style="display:flex; flex-direction:column">
         <div class="exchange-name">
-          <label style="vertical-align: super">{{this.exchangeName}}</label>
+          <label style="vertical-align: super">{{ this.exchangeName }}</label>
         </div>
       </el-col>
       <el-col :span="4">
@@ -12,12 +12,12 @@
     </el-row>
     <el-row :gutter="24">
       <el-col :span="20">
-        <div class="single-balance">BTC {{this.amount}}</div>
+        <div class="single-balance">BTC {{ this.amount }}</div>
       </el-col>
       <el-col :span="4">
         <el-button type="text" @click="showEditDialog = true">Edit</el-button>
         <el-dialog :visible.sync="showEditDialog" width="40%">
-          <div class="dialog-title" slot="title">{{'Edit '+this.exchangeName+' Account'}}</div>
+          <div class="dialog-title" slot="title">{{ "Edit " + this.exchangeName + " Account" }}</div>
           <edit :exchangeData="this.$props.exchangeData" v-on:updated="showEditDialog = false"></edit>
         </el-dialog>
       </el-col>
@@ -82,9 +82,8 @@ export default {
   font-size: 26px;
   text-align: left;
 }
-
 .el-card__body {
-  height: 80% !important;
+  height: 80%;
   display: flex;
   flex-direction: column;
 }

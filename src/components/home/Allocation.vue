@@ -2,15 +2,17 @@
   <el-card style="height:150px;margin-bottom:10px">
     <el-row :gutter="24">
       <el-col :span="20" style="display:flex">
-        <div class="symbol">{{allocation.coin}}</div>
-        <div class="amount">{{tokens}}</div>
+        <div class="symbol">{{ allocation.coin }}</div>
+        <div class="amount">{{ tokens }}</div>
       </el-col>
       <el-col :span="4">
-        <img :src="icon">
+        <img :src="icon" />
       </el-col>
     </el-row>
     <el-row style="margin-top:10px; bottom:-50px">
-      <el-progress :percentage="parseFloat((allocation.portion * 100).toFixed(2))"></el-progress>
+      <el-progress
+        :percentage="parseFloat((allocation.portion * 100).toFixed(2))"
+      ></el-progress>
     </el-row>
   </el-card>
 </template>
@@ -48,4 +50,3 @@ export default {
   font-size: 12px !important;
 }
 </style>
-

@@ -7,7 +7,7 @@
         height="36"
         src="https://intelligenttrading.org/wp-content/themes/intelligent-trading/assets/img/icons/apple-touch-icon-72x72.png"
       >
-      <label class="email">{{this.user.email}}</label>
+      <label class="email">{{ this.user.email }}</label>
       <el-button class="logout-button" @click="logout">Logout
         <font-awesome-icon icon="sign-out-alt"/>
       </el-button>
@@ -20,12 +20,16 @@
               <el-col :span="18" style="text-align:left">
                 <label class="balance">
                   <span style="font-size:21px">BTC</span>
-                  <span v-show="!this.refreshingPortfolio">{{this.totalBalance}}</span>
+                  <span v-show="!this.refreshingPortfolio">
+                    {{
+                    this.totalBalance
+                    }}
+                  </span>
                   <el-tag
                     style="margin-left:20px;font-family:Lato"
                     v-show="this.rebalancingStatus.status != null"
                     :type="this.rebalancingStatus.type"
-                  >Rebalancing {{this.rebalancingStatus.status}}</el-tag>
+                  >Rebalancing {{ this.rebalancingStatus.status }}</el-tag>
                 </label>
                 <loader style="margin:10px" v-show="this.refreshingPortfolio"></loader>
               </el-col>
@@ -50,7 +54,7 @@
                   </div>
                   <el-button
                     circle
-                    class="action-button purple"
+                    class="action-button"
                     :loading="this.rebalancing"
                     @click="rebalance"
                   >
@@ -62,8 +66,12 @@
             <label class="balance-text">Total amount for all the linked exchanges</label>
             <el-alert
               style="margin-top:10px"
-              :title="'Your configuration is not complete, check you exchange accounts and portfolio settings.'"
-              v-show="this.user.exchanges == null || this.user.exchanges.length == 0"
+              :title="
+                'Your configuration is not complete, check you exchange accounts and portfolio settings.'
+              "
+              v-show="
+                this.user.exchanges == null || this.user.exchanges.length == 0
+              "
               type="error"
               :closable="false"
             ></el-alert>
@@ -95,6 +103,7 @@ export default {
   name: "home",
   data() {
     return {
+      socket: {},
       refreshingPortfolio: false,
       error: "",
       currentTabIndex: "1",
@@ -104,7 +113,7 @@ export default {
   },
   components: { Loader },
   methods: {
-    ...mapMutations(["setUser", "setDistribution"]),
+    ...mapMutations(["setUser", "setDistribution", "cleanup"]),
     ...mapActions(["refreshPortfolio"]),
     to: function(url) {
       this.$router.push(url);
@@ -120,25 +129,29 @@ export default {
     },
     rebalance: function() {
       this.rebalancing = true;
+      this.rebalancingStatus = {};
+
       return api
         .rebalance(localStorage["userId"])
         .then(result => {
-          this.$message.success(result.data);
           this.rebalancingStatus = extractRebalancingStatus(result.data);
           this.rebalancing = false;
         })
-        .catch(err => {
+        .catch(() => {
           this.rebalancingStatus = { status: "Error", type: "danger" };
           this.rebalancing = false;
         });
     },
     refresh: function() {
       this.refreshingPortfolio = true;
+      this.rebalancingStatus = {};
 
       return this.refreshPortfolio(localStorage["userId"])
         .then(() => {
+          if (this.distribution.pending.length > 0)
+            this.rebalancingStatus = extractRebalancingStatus("queued");
+
           this.refreshingPortfolio = false;
-          this.$message.success("Portfolio refreshed.");
         })
         .catch(() => {
           this.refreshingPortfolio = false;
@@ -150,15 +163,11 @@ export default {
     }
   },
   mounted() {
-    console.log(process.env.VUE_APP_SOCKET);
-    const socket = io(
+    this.socket = io(
       `${process.env.VUE_APP_SOCKET}?user_id=${localStorage["userId"]}`
     );
-    socket.on("connect", () => {
-      console.log("socket connected");
-    });
 
-    socket.on("message", payload => {
+    this.socket.on("message", payload => {
       if (payload.type == "rebalancing") {
         this.rebalancingStatus = extractRebalancingStatus(payload.data);
       }
@@ -175,8 +184,11 @@ export default {
     if (!this.user.email) this.reloadUser();
     this.refresh();
   },
+  beforeDestroy() {
+    this.socket.disconnect();
+  },
   computed: {
-    ...mapState(["totalBalance", "user", "portfolio"])
+    ...mapState(["totalBalance", "user", "portfolio", "distribution"])
   }
 };
 
@@ -269,4 +281,3 @@ function extractRebalancingStatus(message) {
   padding-bottom: 20px;
 }
 </style>
-

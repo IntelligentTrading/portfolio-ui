@@ -10,7 +10,6 @@
 export default {};
 </script>
 
-
 <style>
 .lds-ellipsis {
   display: inline-block;

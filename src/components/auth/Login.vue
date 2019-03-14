@@ -7,17 +7,29 @@
     ref="loginForm"
   >
     <label class="auth-title">Login</label>
-    <el-form-item prop="email" :rules="[{ required: true, message: 'Email is required' }]">
+    <el-form-item
+      prop="email"
+      :rules="[{ required: true, message: 'Email is required' }]"
+    >
       <el-input v-model="loginForm.email" placeholder="email"></el-input>
     </el-form-item>
-    <el-form-item prop="pass" :rules="[{ required: true, message: 'Password is required' }]">
-      <el-input type="password" placeholder="password" v-model="loginForm.pass" autocomplete="off"></el-input>
+    <el-form-item
+      prop="pass"
+      :rules="[{ required: true, message: 'Password is required' }]"
+    >
+      <el-input
+        type="password"
+        placeholder="password"
+        v-model="loginForm.pass"
+        autocomplete="off"
+      ></el-input>
     </el-form-item>
     <el-form-item style="text-align:right">
       <label
         @click="forgotPassword"
         style="font-weight:600;color:cornflowerblue;cursor:pointer;"
-      >I forgot my password</label>
+        >I forgot my password</label
+      >
     </el-form-item>
     <el-form-item>
       <el-button
@@ -26,7 +38,8 @@
         :disabled="!submittable"
         @click="login"
         :loading="isLoading"
-      >Login</el-button>
+        >Login</el-button
+      >
     </el-form-item>
   </el-form>
 </template>

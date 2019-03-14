@@ -4,24 +4,22 @@ import api from './api/client'
 
 Vue.use(Vuex)
 
+const defaultState = {
+  user: {},
+  totalBalance: 0,
+  distribution: {},
+  portfolio: '',
+  supportedExchanges: [
+    {
+      label: 'Binance',
+      icon:
+        'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@f3661dbd785a91bd2fc1da34750ce1dce2ac771b/svg/color/bnb.svg'
+    }
+  ]
+}
+
 export default new Vuex.Store({
-  state: {
-    user: {},
-    totalBalance: 0,
-    distribution: {},
-    portfolio: '',
-    supportedExchanges: [
-      {
-        label: 'Coinbase',
-        icon: 'https://www.coinbase.com/favicon.ico'
-      },
-      {
-        label: 'Binance',
-        icon:
-          'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@f3661dbd785a91bd2fc1da34750ce1dce2ac771b/svg/color/bnb.svg'
-      }
-    ]
-  },
+  state: defaultState,
   mutations: {
     setUser (state, user) {
       state.user = user
@@ -41,7 +39,6 @@ export default new Vuex.Store({
       } else if (exchanges != null && exchanges.length > 1) {
         let totalAmount = 0
         exchanges.forEach(exchange => {
-          console.log(distribution[exchange])
           totalAmount += distribution[exchange].value
           state.totalBalance = totalAmount
         })
