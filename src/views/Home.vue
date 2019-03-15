@@ -94,28 +94,20 @@
 <script>
 // @ is an alias to /src
 import { mapState, mapMutations, mapActions } from "vuex";
-import { EventBus } from "../util/eventBus.js";
+import { EventBus } from "../util/eventBus";
 import api from "../api/client";
 import Loader from "../components/others/Loader";
-import io from "socket.io-client";
 
 export default {
   name: "home",
   data() {
     return {
-      socket: io(
-        `${process.env.VUE_APP_SOCKET.replace("9991", "3000")}?user_id=${
-          localStorage["userId"]
-        }`,
-        {
-          transports: ["polling", "websocket"]
-        }
-      ),
       refreshingPortfolio: false,
       error: "",
       currentTabIndex: "1",
       rebalancing: false,
-      rebalancingStatus: {}
+      rebalancingStatus: {},
+      timer: null
     };
   },
   components: { Loader },
@@ -155,8 +147,22 @@ export default {
 
       return this.refreshPortfolio(localStorage["userId"])
         .then(() => {
-          if (this.distribution.pending.length > 0)
+          if (
+            this.distribution.pending.some(dp => dp.status == "pending")
+              .length > 0
+          ) {
             this.rebalancingStatus = extractRebalancingStatus("queued");
+          } else if (this.distribution.pending.length > 0) {
+            this.rebalancingStatus = {
+              status: "completed on " + this.distribution.pending[0].updatedAt,
+              type: "success"
+            };
+          } else {
+            this.rebalancingStatus = {
+              status: "ready.",
+              type: "info"
+            };
+          }
 
           this.refreshingPortfolio = false;
         })
@@ -170,17 +176,6 @@ export default {
     }
   },
   mounted() {
-    this.socket.on("message", payload => {
-      if (payload.type == "rebalancing") {
-        this.rebalancingStatus = extractRebalancingStatus(payload.data);
-      }
-    });
-
-    this.socket.on("heartbeat", () => {
-      // eslint-disable-next-line
-      console.log("♡");
-    });
-
     // navigation guard
     EventBus.$on("hashchange", args => {
       if (args[0].path.includes("home")) {
@@ -189,11 +184,10 @@ export default {
           : "1";
       }
     });
+
     if (!this.user.email) this.reloadUser();
     this.refresh();
-  },
-  beforeDestroy() {
-    this.socket.disconnect();
+    this.timer = setInterval(() => this.refresh(), 60000);
   },
   computed: {
     ...mapState(["totalBalance", "user", "portfolio", "distribution"])
