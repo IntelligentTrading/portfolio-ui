@@ -163,9 +163,12 @@ export default {
     }
   },
   mounted() {
-    console.log(`Connecting socket to ${process.env.VUE_APP_ITT_SOCKET}`)
+    console.log(`Connecting socket to ${process.env.VUE_APP_ITT_SOCKET}`);
     this.socket = io(
-      `${process.env.VUE_APP_SOCKET}?user_id=${localStorage["userId"]}`
+      `${process.env.VUE_APP_SOCKET}?user_id=${localStorage["userId"]}`,
+      {
+        transports: ["polling", "websocket"]
+      }
     );
 
     this.socket.on("message", payload => {
@@ -175,7 +178,7 @@ export default {
     });
 
     this.socket.on("heartbeat", () => {
-      console.log('♡')
+      console.log("♡");
     });
 
     // navigation guard
