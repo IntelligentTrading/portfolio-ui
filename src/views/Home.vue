@@ -163,9 +163,10 @@ export default {
     }
   },
   mounted() {
-    console.log(`Connecting socket to ${process.env.VUE_APP_SOCKET}`);
     this.socket = io(
-      `${process.env.VUE_APP_SOCKET}?user_id=${localStorage["userId"]}`,
+      `${process.env.VUE_APP_SOCKET.replace("9991", "8080")}?user_id=${
+        localStorage["userId"]
+      }`,
       {
         transports: ["polling", "websocket"]
       }
@@ -178,6 +179,7 @@ export default {
     });
 
     this.socket.on("heartbeat", () => {
+      // eslint-disable-next-line
       console.log("♡");
     });
 
