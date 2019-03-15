@@ -103,7 +103,14 @@ export default {
   name: "home",
   data() {
     return {
-      socket: {},
+      socket: io(
+        `${process.env.VUE_APP_SOCKET.replace("9991", "3000")}?user_id=${
+          localStorage["userId"]
+        }`,
+        {
+          transports: ["polling", "websocket"]
+        }
+      ),
       refreshingPortfolio: false,
       error: "",
       currentTabIndex: "1",
@@ -163,15 +170,6 @@ export default {
     }
   },
   mounted() {
-    this.socket = io(
-      `${process.env.VUE_APP_SOCKET.replace("9991", "8080")}?user_id=${
-        localStorage["userId"]
-      }`,
-      {
-        transports: ["polling", "websocket"]
-      }
-    );
-
     this.socket.on("message", payload => {
       if (payload.type == "rebalancing") {
         this.rebalancingStatus = extractRebalancingStatus(payload.data);
