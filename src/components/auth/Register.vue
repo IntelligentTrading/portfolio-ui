@@ -1,15 +1,7 @@
 <template>
-  <el-form
-    class="login-card"
-    :model="registerForm"
-    status-icon
-    ref="registerForm"
-  >
+  <el-form class="login-card" :model="registerForm" status-icon ref="registerForm">
     <label class="auth-title">Create Account</label>
-    <el-form-item
-      prop="email"
-      :rules="[{ required: true, message: 'Email is required' }]"
-    >
+    <el-form-item prop="email" :rules="[{ required: true, message: 'Email is required' }]">
       <el-input v-model="registerForm.email" placeholder="email"></el-input>
     </el-form-item>
     <el-form-item
@@ -41,9 +33,9 @@
       ></el-input>
     </el-form-item>
     <el-form-item style="text-align:left">
-      <el-checkbox v-model="registerForm.termsAcceptance"
-        >I've read and accept the terms and conditions.</el-checkbox
-      >
+      <el-checkbox
+        v-model="registerForm.termsAcceptance"
+      >I've read and accept the terms and conditions.</el-checkbox>
     </el-form-item>
     <el-form-item>
       <el-button
@@ -52,8 +44,7 @@
         @click="register"
         :disabled="!completed"
         :loading="isLoading"
-        >Sign Up</el-button
-      >
+      >Sign Up</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -80,9 +71,9 @@ export default {
         .then(() => {
           this.isLoading = false;
           this.$message.success(`User ${this.registerForm.email} created.`);
-          setTimeout(() => {
-            this.$router.push("/auth"); // send confirmation email
-          }, 1000);
+        })
+        .then(() => {
+          this.$router.push("/auth?idx=0");
         })
         .catch(() => {
           this.$message.error("Something went wrong!");

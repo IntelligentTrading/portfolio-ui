@@ -135,6 +135,7 @@ export default {
         .then(result => {
           this.rebalancingStatus = extractRebalancingStatus(result.data);
           this.rebalancing = false;
+          this.timer = setInterval(() => this.refresh(), 60000 * 5);
         })
         .catch(() => {
           this.rebalancingStatus = { status: "Error", type: "danger" };
@@ -153,10 +154,17 @@ export default {
           ) {
             this.rebalancingStatus = extractRebalancingStatus("queued");
           } else if (this.distribution.pending.length > 0) {
+            let lastUpdateDate = new Date(
+              this.distribution.pending[0].updatedAt
+            );
+
             this.rebalancingStatus = {
-              status: "completed on " + this.distribution.pending[0].updatedAt,
+              status:
+                "completed on " + lastUpdateDate.toString().split("GMT")[0],
               type: "success"
             };
+
+            this.timer = setInterval(() => this.refresh(), 60000 * 45);
           } else {
             this.rebalancingStatus = {
               status: "ready.",
@@ -187,7 +195,7 @@ export default {
 
     if (!this.user.email) this.reloadUser();
     this.refresh();
-    this.timer = setInterval(() => this.refresh(), 60000);
+    this.timer = setInterval(() => this.refresh(), 60000 * 45);
   },
   computed: {
     ...mapState(["totalBalance", "user", "portfolio", "distribution"])

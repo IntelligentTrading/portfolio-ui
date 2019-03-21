@@ -1,12 +1,8 @@
 <template>
   <div style="height:500px">
-    <el-row
-      :gutter="24"
-      style="height:100%;display:flex;justify-content:center"
-    >
+    <el-row :gutter="24" style="height:100%;display:flex;justify-content:center">
       <el-col :span="7" class="portfolio-type-container">
-        <el-row class="portfolio-type"
-          >Conservative
+        <el-row class="portfolio-type">Conservative
           <font-awesome-icon
             icon="check"
             style="color:green"
@@ -20,7 +16,7 @@
             title
             type="pie"
             :height="350"
-            :colors="['purple', '#ffa3ef', 'light-blue']"
+            :colors="['#92D18B', '#5FAE57']"
             :dataSets="[
               {
                 name: 'Some Data',
@@ -35,14 +31,12 @@
             class="select-button"
             :disabled="this.portfolio === 'conservative'"
             @click="switchPortfolio('conservative')"
-            >Select</el-button
-          >
+          >Select</el-button>
         </el-row>
       </el-col>
 
       <el-col :span="7" class="portfolio-type-container">
-        <el-row class="portfolio-type"
-          >Moderately Aggressive
+        <el-row class="portfolio-type">Moderately Aggressive
           <font-awesome-icon
             icon="check"
             style="color:green"
@@ -56,7 +50,7 @@
             title
             type="pie"
             :height="350"
-            :colors="['purple', '#ffa3ef', 'light-blue']"
+            :colors="['#038AB7', '#0F6C8B', '#26596A']"
             :dataSets="[
               {
                 name: 'Some Data',
@@ -70,13 +64,11 @@
             class="select-button"
             :disabled="this.portfolio === 'mod-aggressive'"
             @click="switchPortfolio('mod-aggressive')"
-            >Select</el-button
-          >
+          >Select</el-button>
         </el-row>
       </el-col>
       <el-col :span="7" class="portfolio-type-container">
-        <el-row class="portfolio-type"
-          >Aggressive
+        <el-row class="portfolio-type">Aggressive
           <font-awesome-icon
             icon="check"
             style="color:green"
@@ -91,11 +83,13 @@
             type="pie"
             :height="350"
             :colors="[
-              'purple',
-              '#ffa3ef',
-              'light-blue',
-              'cornflowerblue',
-              'cyan'
+              '#9B2E00',
+              '#C53B00',
+              '#D33F00',
+              '#7B2A00',
+              '#FF9263',
+              '#FD7439',
+              '#FF4C00'
             ]"
             :dataSets="[
               {
@@ -110,8 +104,7 @@
             class="select-button"
             :disabled="this.portfolio === 'aggressive'"
             @click="switchPortfolio('aggressive')"
-            >Select</el-button
-          >
+          >Select</el-button>
         </el-row>
       </el-col>
     </el-row>

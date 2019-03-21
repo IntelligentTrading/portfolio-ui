@@ -14,6 +14,9 @@ const client = {
       password: password
     })
   },
+  confirm: signupToken => {
+    return axiosInstance.get(`${apiurl}/auth/register/confirm/${signupToken}`)
+  },
   login: (email, password) => {
     return axiosInstance.post(`${apiurl}/auth/login`, {
       email: email,
