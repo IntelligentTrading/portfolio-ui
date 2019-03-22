@@ -8,7 +8,8 @@
         src="https://intelligenttrading.org/wp-content/themes/intelligent-trading/assets/img/icons/apple-touch-icon-72x72.png"
       >
       <label class="email">{{ this.user.email }}</label>
-      <el-button class="logout-button" @click="logout">Logout
+      <el-button class="logout-button" @click="logout">
+        Logout
         <font-awesome-icon icon="sign-out-alt"/>
       </el-button>
     </el-row>
@@ -63,7 +64,7 @@
                 </el-tooltip>
               </el-col>
             </el-row>
-            <label class="balance-text">Total amount for all the linked exchanges</label>
+            <label class="balance-text">Total amount for all linked exchanges</label>
             <el-alert
               style="margin-top:10px"
               :title="
@@ -137,8 +138,17 @@ export default {
           this.rebalancing = false;
           this.timer = setInterval(() => this.refresh(), 60000 * 5);
         })
-        .catch(() => {
-          this.rebalancingStatus = { status: "Error", type: "danger" };
+        .catch(payload => {
+          let message = "has been postponed. Please check the status in few minutes.";
+          let type = "warning";
+          if (
+            payload.response.data &&
+            payload.response.data.includes("API-key")
+          ) {
+            message = "not enqueued: check your exchange credentials.";
+            type = "danger";
+          }
+          this.rebalancingStatus = { status: message, type: type };
           this.rebalancing = false;
         });
     },

@@ -12,10 +12,18 @@ import {
   faSyncAlt,
   faSignOutAlt,
   faCheck,
-  faKey
+  faKey,
+  faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faBalanceScale, faSyncAlt, faSignOutAlt, faCheck, faKey)
+library.add(
+  faBalanceScale,
+  faSyncAlt,
+  faSignOutAlt,
+  faCheck,
+  faKey,
+  faExclamationTriangle
+)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

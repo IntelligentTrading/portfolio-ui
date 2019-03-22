@@ -29,20 +29,15 @@ export default new Vuex.Store({
       state.totalBalance = balance
     },
     setDistribution (state, distribution) {
-      state.distribution = distribution == null ? {} : distribution
+      state.distribution = distribution || {}
 
-      state.user.exchanges
       const exchanges = state.user.exchanges.map(x => x.label)
 
-      if (exchanges != null && exchanges.length == 1) {
-        state.totalBalance = distribution[exchanges[0]].value
-      } else if (exchanges != null && exchanges.length > 1) {
-        let totalAmount = 0
-        exchanges.forEach(exchange => {
-          totalAmount += distribution[exchange].value
-          state.totalBalance = totalAmount
-        })
-      } else state.totalBalance = 0
+      let totalAmount = 0
+      exchanges.forEach(exchange => {
+        if (distribution[exchange]) totalAmount += distribution[exchange].value
+      })
+      state.totalBalance = totalAmount
     },
     setPortfolio (state, portfolio) {
       state.portfolio = portfolio
@@ -53,16 +48,27 @@ export default new Vuex.Store({
   },
   actions: {
     addExchange: async function (ctx, { userId, exchange }) {
-      return api.exchange.add(userId, exchange).then(result => {
-        ctx.commit('setExchanges', result.data)
-        return ctx.dispatch('refreshPortfolio', userId)
-      })
+      return api.exchange
+        .add(userId, exchange)
+        .then(result => {
+          ctx.commit('setExchanges', result.data)
+          return ctx.dispatch('refreshPortfolio', userId)
+        })
+        .catch(err => {
+          console.log(exchange)
+          let victim = ctx.state.user.exchanges.find(
+            ex => ex.label === exchange.label
+          )
+          console.log(victim)
+        })
     },
     editExchange: async function (ctx, { userId, exchange }) {
-      return api.exchange.edit(userId, exchange).then(result => {
-        ctx.commit('setExchanges', result.data)
-        return ctx.dispatch('refreshPortfolio', userId)
-      })
+      return api.exchange
+        .edit(userId, exchange)
+        .then(result => {
+          ctx.commit('setExchanges', result.data)
+          return ctx.dispatch('refreshPortfolio', userId)
+        })
     },
     deleteExchange: async function (ctx, { userId, exchange }) {
       return api.exchange.delete(userId, exchange).then(result => {

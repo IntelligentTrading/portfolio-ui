@@ -5,32 +5,19 @@
       <add v-on:added="showAddNewExchange = false"></add>
     </el-dialog>
     <el-row :gutter="24">
-      <el-col
-        :span="20"
-        style="text-align:left;font-family:lato;font-size:21px"
-      >
+      <el-col :span="20" style="text-align:left;font-family:lato;font-size:21px">
         <label>Your exchanges</label>
       </el-col>
       <el-col :span="4" style="text-align:right">
-        <el-button
-          type="text"
-          icon="el-icon-plus"
-          @click="showAddNewExchange = true"
-          >ADD EXCHANGE</el-button
-        >
+        <el-button type="text" icon="el-icon-plus" @click="showAddNewExchange = true">ADD EXCHANGE</el-button>
       </el-col>
     </el-row>
     <el-row id="exchanges-data-container">
-      <exchange
-        v-for="item in this.linkedExchanges"
-        :key="item._id"
-        :exchangeData="item"
-      ></exchange>
+      <exchange v-for="item in this.linkedExchanges" :key="item._id" :exchangeData="item"></exchange>
     </el-row>
     <label
       v-show="this.user.exchanges == null || this.user.exchanges.length == 0"
-      >No exchanges selected</label
-    >
+    >No exchanges selected</label>
   </div>
 </template>
 <script>
@@ -89,8 +76,9 @@ export default {
 .dialog-confirm-button {
   background: cornflowerblue !important;
   color: white !important;
-  width: 190px;
+  width: 300px;
   height: 45px;
+  margin-top: 10px !important;
   letter-spacing: 1px;
   border: none !important;
 }

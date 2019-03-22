@@ -1,10 +1,9 @@
 <template>
   <div class="forgot-box">
     <label class="help-title">Forgot your password?</label>
-    <label class="help-text"
-      >Enter your registered email and we'll provide a link to follow in order
-      to reset your password.</label
-    >
+    <label
+      class="help-text"
+    >Enter your registered email and we will send you a link to reset your password.</label>
     <div style="text-align:left">
       <el-input
         style="width:50%;display:inline-block;margin-right:10px"
@@ -17,8 +16,7 @@
         :disabled="email == ''"
         @click="send"
         :loading="isLoading"
-        >Send</el-button
-      >
+      >Send</el-button>
     </div>
   </div>
 </template>

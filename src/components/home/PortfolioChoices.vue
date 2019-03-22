@@ -1,32 +1,27 @@
 <template>
   <div style="height:500px">
     <el-row :gutter="24" style="height:100%;display:flex;justify-content:center">
-      <el-col :span="7" class="portfolio-type-container">
-        <el-row class="portfolio-type">Conservative
-          <font-awesome-icon
-            icon="check"
-            style="color:green"
-            v-show="this.portfolio === 'conservative'"
-          />
-        </el-row>
+      <el-col :span="8" class="portfolio-type-container">
+        <el-row
+          class="portfolio-type"
+          :class="this.portfolio === 'conservative' ? 'selected-portfolio':''"
+        >Conservative</el-row>
         <el-row class="portfolio-distribution">
           <vue-frappe
             id="cons"
             :labels="['BTC', 'ETH']"
             title
             type="pie"
-            :height="350"
             :colors="['#92D18B', '#5FAE57']"
             :dataSets="[
               {
                 name: 'Some Data',
-                chartType: 'bar',
                 values: [50, 50]
               }
             ]"
           ></vue-frappe>
         </el-row>
-        <el-row style="flex:1">
+        <el-row style="flex:0 0 auto">
           <el-button
             class="select-button"
             :disabled="this.portfolio === 'conservative'"
@@ -35,21 +30,17 @@
         </el-row>
       </el-col>
 
-      <el-col :span="7" class="portfolio-type-container">
-        <el-row class="portfolio-type">Moderately Aggressive
-          <font-awesome-icon
-            icon="check"
-            style="color:green"
-            v-show="this.portfolio === 'mod-aggressive'"
-          />
-        </el-row>
+      <el-col :span="8" class="portfolio-type-container">
+        <el-row
+          class="portfolio-type"
+          :class="this.portfolio === 'mod-aggressive' ? 'selected-portfolio':''"
+        >Moderately Aggressive</el-row>
         <el-row class="portfolio-distribution">
           <vue-frappe
             id="mod"
             :labels="['BTC', 'ETH', 'LTC']"
             title
             type="pie"
-            :height="350"
             :colors="['#038AB7', '#0F6C8B', '#26596A']"
             :dataSets="[
               {
@@ -59,7 +50,7 @@
             ]"
           ></vue-frappe>
         </el-row>
-        <el-row style="flex:1">
+        <el-row style="flex:0 0 auto">
           <el-button
             class="select-button"
             :disabled="this.portfolio === 'mod-aggressive'"
@@ -67,21 +58,18 @@
           >Select</el-button>
         </el-row>
       </el-col>
-      <el-col :span="7" class="portfolio-type-container">
-        <el-row class="portfolio-type">Aggressive
-          <font-awesome-icon
-            icon="check"
-            style="color:green"
-            v-show="this.portfolio === 'aggressive'"
-          />
-        </el-row>
+      <el-col
+        :span="8"
+        class="portfolio-type-container"
+        :class="this.portfolio === 'aggressive' ? 'selected-portfolio':''"
+      >
+        <el-row class="portfolio-type">Aggressive</el-row>
         <el-row class="portfolio-distribution">
           <vue-frappe
             id="agg"
-            :labels="['BTC', 'ETH', 'LTC', 'XRP', 'EOS', 'ADA']"
+            :labels="['BTC', 'ETH', 'LTC', 'XRP', 'EOS']"
             title
             type="pie"
-            :height="350"
             :colors="[
               '#9B2E00',
               '#C53B00',
@@ -94,12 +82,12 @@
             :dataSets="[
               {
                 name: 'Some Data',
-                values: [50, 10, 10, 10, 10, 10]
+                values: [50, 20, 10, 10, 10]
               }
             ]"
           ></vue-frappe>
         </el-row>
-        <el-row style="flex:1">
+        <el-row style="flex:0 0 auto">
           <el-button
             class="select-button"
             :disabled="this.portfolio === 'aggressive'"
@@ -126,8 +114,8 @@ export default {
         `This will automatically change your holdings to the selected portfolio. Continue?`,
         "Portfolio selection",
         {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
           type: "warning"
         }
       ).then(() => {
@@ -147,11 +135,13 @@ export default {
 .portfolio-type {
   font-size: 18px;
   font-family: Lato;
+  flex: 0 0 auto;
 }
 
 .portfolio-distribution {
   font-size: 18px;
   font-family: Roboto;
+  flex: 1 1 0%;
 }
 
 .portfolio-type-container {
@@ -159,10 +149,12 @@ export default {
   margin: 10px;
   border-radius: 20px;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .el-row {
-  margin: 20px;
+  margin: 10px;
 }
 
 .select-button {
@@ -173,5 +165,10 @@ export default {
 }
 .frappe-chart .chart-legend {
   display: none;
+}
+
+.selected-portfolio {
+  color: green;
+  font-weight: bold
 }
 </style>

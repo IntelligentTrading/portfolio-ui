@@ -70,15 +70,6 @@ const client = {
       })
   },
   exchange: {
-    testConnection: () => {
-      // api to add
-
-      // exchange
-      return Promise.resolve({
-        success: true,
-        message: 'Connection test successful'
-      })
-    },
     add: (id, exchange) => {
       return exchangeOperation(id, exchange, 'POST')
     },
@@ -94,10 +85,10 @@ const client = {
 export default client
 
 function handleUnauthorized (err) {
-  if (err.response.status === 401) {
+  if (err.response && err.response.status === 401) {
     global.vm.$emit('401')
   }
-  return err
+  return Promise.reject(err)
 }
 
 function exchangeOperation (id, exchange, method) {

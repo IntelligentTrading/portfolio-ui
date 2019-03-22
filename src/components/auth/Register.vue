@@ -33,9 +33,22 @@
       ></el-input>
     </el-form-item>
     <el-form-item style="text-align:left">
-      <el-checkbox
-        v-model="registerForm.termsAcceptance"
-      >I've read and accept the terms and conditions.</el-checkbox>
+      <el-checkbox v-model="registerForm.termsAcceptance">
+        I've read and accept the
+        <a
+          href="https://intelligenttrading.org/terms-of-service/"
+          target="blank"
+        >Terms and Conditions</a>,
+        <br>the
+        <a
+          href="https://intelligenttrading.org/end-user-software-license-agreement/"
+          target="blank"
+        >EULA</a> and the
+        <a
+          href="https://intelligenttrading.org/privacy-policy/"
+          target="blank"
+        >Privacy Policy</a>.
+      </el-checkbox>
     </el-form-item>
     <el-form-item>
       <el-button
@@ -105,4 +118,8 @@ export default {
   }
 };
 </script>
-<style></style>
+<style>
+.el-checkbox__input {
+  vertical-align: super !important;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <div class="portfolio-container">
-    <el-dialog :visible.sync="showPortfolios" width="70%">
+    <el-dialog :visible.sync="showPortfolios" width="90%" height=90%>
       <div class="dialog-title" slot="title">Please choose your portfolio</div>
       <portfolio-choices></portfolio-choices>
     </el-dialog>
@@ -9,10 +9,10 @@
         <label class="portfolio-strategy">{{ this.portfolioLabel }}</label>
         <el-button type="text" icon="el-icon-setting" @click="showPortfolios = true">CHANGE</el-button>
       </el-col>
-      <el-col :span="12" style="text-align:right">
+      <!--<el-col :span="12" style="text-align:right">
         <el-button type="text" icon="el-icon-menu"></el-button>
         <el-button type="text" icon="el-icon-search"></el-button>
-      </el-col>
+      </el-col>-->
     </el-row>
     <el-row id="allocations-container">
       <allocation

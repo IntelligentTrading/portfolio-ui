@@ -1,11 +1,7 @@
 <template>
   <div>
     <div class="fields-container">
-      <el-select
-        class="credentials"
-        v-model="selectedExchange.label"
-        placeholder="Select Exchange"
-      >
+      <el-select class="credentials" v-model="selectedExchange.label" placeholder="Select Exchange">
         <el-option
           v-for="item in this.supportedExchanges"
           :key="item.label"
@@ -13,20 +9,14 @@
           :value="item.label"
         ></el-option>
       </el-select>
-      <label v-show="this.isAlreadyConfigured" style="color:red"
-        >This exchange is already linked!</label
-      >
+      <label v-show="this.isAlreadyConfigured" style="color:red">This exchange is already linked!</label>
       <el-input
         class="credentials"
         :type="api_key_field_type"
         placeholder="API KEY"
         v-model="selectedExchange.credentials.api_key"
       >
-        <i
-          slot="suffix"
-          @click="showPassword('api_key')"
-          class="el-input__icon el-icon-view"
-        ></i>
+        <i slot="suffix" @click="showPassword('api_key')" class="el-input__icon el-icon-view"></i>
       </el-input>
       <el-input
         class="credentials"
@@ -34,39 +24,17 @@
         placeholder="Secret"
         v-model="selectedExchange.credentials.secret"
       >
-        <i
-          slot="suffix"
-          @click="showPassword('secret')"
-          class="el-input__icon el-icon-view"
-        ></i>
+        <i slot="suffix" @click="showPassword('secret')" class="el-input__icon el-icon-view"></i>
       </el-input>
-      <div style="display:flex;flex-direction:row;margin-top:10px">
-        <el-button
-          type="warning"
-          icon="el-icon-warning"
-          @click="this.testConnection"
-          :loading="this.isTesting"
-          >TEST</el-button
-        >
-        <el-button
-          class="dialog-confirm-button"
-          :disabled="!this.isValidExchange"
-          @click="add"
-          >SAVE</el-button
-        >
-      </div>
-      <label
-        style="margin:10px"
-        :style="this.dialogMessage.success ? 'color:green' : 'color:red'"
-        v-show="this.dialogMessage.text != ''"
-        >{{ this.dialogMessage.text }}</label
-      >
+
+      <el-button class="dialog-confirm-button" :disabled="!this.isValidExchange" @click="add">SAVE</el-button>
     </div>
   </div>
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
 import api from "../../../api/client";
+import { EventBus } from "../../../util/eventBus.js";
 
 export default {
   data() {
@@ -77,11 +45,6 @@ export default {
         label: "",
         enabled: true,
         credentials: { api_key: "", secret: "" }
-      },
-      isTesting: false,
-      dialogMessage: {
-        text: "",
-        success: false
       }
     };
   },
@@ -110,21 +73,15 @@ export default {
       this[field + "_field_type"] =
         this[field + "_field_type"] == "text" ? "password" : "text";
     },
-    testConnection: function() {
-      this.isTesting = true;
-      return api.exchange
-        .testConnection(this.selectedExchange)
-        .then(testResult => {
-          this.isTesting = false;
-          this.dialogMessage.success = testResult.success;
-          this.dialogMessage.text = testResult.message;
-        });
-    },
     add: function() {
+      this.$emit("added");
       return this.addExchange({
         userId: localStorage["userId"],
         exchange: this.selectedExchange
-      }).then(() => this.$emit("added"));
+      }).then(() => {
+        this.selectedExchange.label = "";
+        this.selectedExchange.credentials = { api_key: "", secret: "" };
+      });
     }
   }
 };
