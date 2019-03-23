@@ -45,7 +45,7 @@
 </template>
 <script>
 import api from "../../api/client";
-import { mapMutations } from "vuex";
+import { mapMutations,mapActions } from "vuex";
 
 export default {
   data() {
@@ -59,6 +59,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setUser"]),
+    ...mapActions(["refreshPortfolio"]),
     login: function() {
       this.isLoading = true;
       return api
@@ -68,6 +69,7 @@ export default {
           localStorage.setItem("token", payload.data.token);
           localStorage.setItem("pubKey", payload.data.pubKey);
           localStorage.setItem("userId", payload.data.user._id);
+
           this.setUser(payload.data.user);
           this.$router.push("/home");
         })

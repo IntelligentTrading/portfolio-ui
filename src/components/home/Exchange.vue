@@ -1,5 +1,5 @@
 <template>
-  <el-card style="height:150px">
+  <el-card style="height:150px" :class="this.exchangeData.credentials.valid?'':'misconfigured'">
     <el-row :gutter="24" style="flex-grow:1">
       <el-col :span="20" style="display:flex; flex-direction:column">
         <div class="exchange-name">
@@ -69,6 +69,10 @@ export default {
   margin-left: 10px;
   font-size: 20px;
   text-align: left;
+}
+
+.misconfigured {
+  border: 1px solid red !important;
 }
 
 .exchange-name {

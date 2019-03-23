@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setExchanges"]),
-    ...mapActions(["addExchange"]),
+    ...mapActions(["addExchange", "refreshUser"]),
     showPassword: function(field) {
       this[field + "_field_type"] =
         this[field + "_field_type"] == "text" ? "password" : "text";
@@ -78,10 +78,20 @@ export default {
       return this.addExchange({
         userId: localStorage["userId"],
         exchange: this.selectedExchange
-      }).then(() => {
-        this.selectedExchange.label = "";
-        this.selectedExchange.credentials = { api_key: "", secret: "" };
-      });
+      })
+        .then(() => {
+          this.selectedExchange.label = "";
+          this.selectedExchange.credentials = { api_key: "", secret: "" };
+        })
+        .catch(err => {
+          if (
+            err.response &&
+            err.response.data &&
+            err.response.data.includes("APIError")
+          ) {
+            return this.refreshUser(localStorage["userId"]);
+          }
+        });
     }
   }
 };

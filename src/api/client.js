@@ -47,6 +47,13 @@ const client = {
       })
       .catch(err => handleUnauthorized(err))
   },
+  toggleAutorebalancing: id => {
+    return axiosInstance
+      .put(`${apiurl}/users/${id}/rebalance/toggle`, null, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+      })
+      .catch(err => handleUnauthorized(err))
+  },
   rebalance: id => {
     return axiosInstance
       .put(`${apiurl}/users/${id}/rebalance`, null, {

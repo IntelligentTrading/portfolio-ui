@@ -1,6 +1,6 @@
 <template>
   <div class="portfolio-container">
-    <el-dialog :visible.sync="showPortfolios" width="90%" height=90%>
+    <el-dialog :visible.sync="showPortfolios" width="90%" height="90%">
       <div class="dialog-title" slot="title">Please choose your portfolio</div>
       <portfolio-choices></portfolio-choices>
     </el-dialog>
@@ -8,6 +8,9 @@
       <el-col :span="12" style="text-align:left">
         <label class="portfolio-strategy">{{ this.portfolioLabel }}</label>
         <el-button type="text" icon="el-icon-setting" @click="showPortfolios = true">CHANGE</el-button>
+      </el-col>
+      <el-col :span="12" style="text-align:right">
+        <el-switch v-model="autorebalance" active-color="#13ce66" active-text="Rebalance Automatically" @change="toggleAutorebalancing()"></el-switch>
       </el-col>
       <!--<el-col :span="12" style="text-align:right">
         <el-button type="text" icon="el-icon-menu"></el-button>
@@ -21,7 +24,8 @@
         :allocation="item"
       ></allocation>
     </el-row>
-    <label v-show="this.distribution.length == 0">No allocations, you must
+    <label v-show="this.distribution.length == 0">
+      No allocations, you must
       <el-button
         type="text"
         @click="
@@ -35,7 +39,7 @@
 import Allocation from "./Allocation";
 import mhelper from "../../util/mathHelper";
 import PortfolioChoices from "./PortfolioChoices";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
@@ -44,7 +48,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(["distribution", "totalBalance", "portfolio"]),
+    ...mapState(["distribution", "totalBalance", "portfolio", "user"]),
+    autorebalance: {
+      get() {
+        return this.user.portfolio ? this.user.portfolio.autorebalance : false;
+      },
+      set() {}
+    },
     mergedDistributions: function() {
       if (Object.getOwnPropertyNames(this.distribution).length == 0) return [];
 
@@ -87,6 +97,9 @@ export default {
       const dblabels = ["conservative", "mod-aggressive", "aggressive"];
       return labels[dblabels.indexOf(this.portfolio)];
     }
+  },
+  methods: {
+    ...mapActions(["toggleAutorebalancing"])
   },
   components: { Allocation, PortfolioChoices }
 };

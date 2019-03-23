@@ -44,7 +44,7 @@ const router = new Router({
       component: Home,
       redirect: '/home/portfolio',
       children: [
-        { path: 'portfolio', component: Portfolio },
+        { path: 'portfolio', component: Portfolio, name: 'portfolio' },
         {
           path: 'exchange',
           component: Exchanges,

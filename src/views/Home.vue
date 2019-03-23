@@ -67,12 +67,8 @@
             <label class="balance-text">Total amount for all linked exchanges</label>
             <el-alert
               style="margin-top:10px"
-              :title="
-                'Your configuration is not complete, check you exchange accounts and portfolio settings.'
-              "
-              v-show="
-                this.user.exchanges == null || this.user.exchanges.length == 0
-              "
+              :title="this.error"
+              v-show="this.error!=''"
               type="error"
               :closable="false"
             ></el-alert>
@@ -104,7 +100,6 @@ export default {
   data() {
     return {
       refreshingPortfolio: false,
-      error: "",
       currentTabIndex: "1",
       rebalancing: false,
       rebalancingStatus: {},
@@ -112,20 +107,17 @@ export default {
     };
   },
   components: { Loader },
+  computed: {
+    ...mapState(["totalBalance", "user", "portfolio", "distribution","error"])
+  },
   methods: {
-    ...mapMutations(["setUser", "setDistribution", "cleanup"]),
-    ...mapActions(["refreshPortfolio"]),
+    ...mapMutations(["setUser", "cleanup"]),
+    ...mapActions(["refreshPortfolio", "refreshUser"]),
     to: function(url) {
       this.$router.push(url);
     },
     reloadUser: function() {
-      return api.user(localStorage.getItem("userId")).then(user => {
-        this.setUser(user.data);
-        if (this.user.exchanges.length == 0) this.error = "Set an exchange!";
-        else if (this.user.portfolio.packs.length == 0)
-          this.error = "Set a portfolio strategy!";
-        else this.error = "";
-      });
+      return this.refreshUser(localStorage["userId"]);
     },
     rebalance: function() {
       this.rebalancing = true;
@@ -136,10 +128,10 @@ export default {
         .then(result => {
           this.rebalancingStatus = extractRebalancingStatus(result.data);
           this.rebalancing = false;
-          this.timer = setInterval(() => this.refresh(), 60000 * 5);
         })
         .catch(payload => {
-          let message = "has been postponed. Please check the status in few minutes.";
+          let message =
+            "is scheduled, if nothing happens try again in 20 minutes.";
           let type = "warning";
           if (
             payload.response.data &&
@@ -173,8 +165,6 @@ export default {
                 "completed on " + lastUpdateDate.toString().split("GMT")[0],
               type: "success"
             };
-
-            this.timer = setInterval(() => this.refresh(), 60000 * 45);
           } else {
             this.rebalancingStatus = {
               status: "ready.",
@@ -203,12 +193,8 @@ export default {
       }
     });
 
-    if (!this.user.email) this.reloadUser();
+    this.reloadUser();
     this.refresh();
-    this.timer = setInterval(() => this.refresh(), 60000 * 45);
-  },
-  computed: {
-    ...mapState(["totalBalance", "user", "portfolio", "distribution"])
   }
 };
 
