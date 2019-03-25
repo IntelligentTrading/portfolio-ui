@@ -102,6 +102,7 @@
 <script>
 import api from "../../api/client";
 import { mapMutations, mapState } from "vuex";
+import { EventBus } from "../../util/eventBus";
 
 export default {
   computed: {
@@ -124,6 +125,9 @@ export default {
           .then(result => {
             this.setPortfolio(packLabel);
             this.$message.success(result.data);
+          })
+          .then(() => {
+            EventBus.$emit("settingsChanged");
           });
       });
     }
@@ -169,6 +173,6 @@ export default {
 
 .selected-portfolio {
   color: green;
-  font-weight: bold
+  font-weight: bold;
 }
 </style>

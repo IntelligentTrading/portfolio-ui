@@ -199,6 +199,10 @@ export default {
       }
     });
 
+    EventBus.$on("settingsChanged", () => {
+      this.rebalance()
+    });
+
     this.reloadUser();
     this.refresh();
   }
