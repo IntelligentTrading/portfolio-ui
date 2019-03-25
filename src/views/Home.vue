@@ -7,11 +7,14 @@
         height="36"
         src="https://intelligenttrading.org/wp-content/themes/intelligent-trading/assets/img/icons/apple-touch-icon-72x72.png"
       >
-      <label class="email">{{ this.user.email }}</label>
-      <el-button class="logout-button" @click="logout">
-        Logout
-        <font-awesome-icon icon="sign-out-alt"/>
-      </el-button>
+      <div class="nav-area">
+        <el-button type="text">{{ this.user.email }}</el-button>
+        <el-button type="text" @click="openFaq">FAQ</el-button>
+        <el-button type="text" @click="logout">
+          Logout
+          <font-awesome-icon icon="sign-out-alt"/>
+        </el-button>
+      </div>
     </el-row>
     <el-row :gutter="24">
       <el-col :offset="4" :span="16">
@@ -108,11 +111,14 @@ export default {
   },
   components: { Loader },
   computed: {
-    ...mapState(["totalBalance", "user", "portfolio", "distribution","error"])
+    ...mapState(["totalBalance", "user", "portfolio", "distribution", "error"])
   },
   methods: {
     ...mapMutations(["setUser", "cleanup"]),
     ...mapActions(["refreshPortfolio", "refreshUser"]),
+    openFaq: function() {
+      window.open("https://intelligenttrading.org/faq/", "_blank");
+    },
     to: function(url) {
       this.$router.push(url);
     },
@@ -229,10 +235,13 @@ function extractRebalancingStatus(message) {
   font-family: "Lato";
 }
 
-.logout-button {
+.nav-area {
   position: absolute;
-  right: 10px;
+  right: 40px;
   top: 10px;
+}
+
+.logout-button {
   color: cornflowerblue !important;
 }
 
