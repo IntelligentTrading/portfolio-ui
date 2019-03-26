@@ -63,6 +63,7 @@
 </template>
 <script>
 import api from "../../api/client";
+import { EventBus } from "../../util/eventBus";
 
 export default {
   data() {
@@ -86,7 +87,7 @@ export default {
           this.$message.success(`User ${this.registerForm.email} created.`);
         })
         .then(() => {
-          this.$router.push("/auth?idx=0");
+          EventBus.$emit("created");
         })
         .catch(() => {
           this.$message.error("Something went wrong!");

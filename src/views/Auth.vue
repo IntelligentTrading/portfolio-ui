@@ -39,6 +39,7 @@
 import Login from "../components/auth/Login";
 import Register from "../components/auth/Register";
 import ResetPassword from "../components/auth/ResetPassword";
+import { EventBus } from "../util/eventBus";
 
 export default {
   props: ["magicLinkToken"],
@@ -64,6 +65,11 @@ export default {
     Login,
     Register,
     ResetPassword
+  },
+  mounted() {
+    EventBus.$on("created", () => {
+      this.authComponentsIdx = 0;
+    });
   }
 };
 </script>

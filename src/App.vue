@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view />
+    <router-view/>
   </div>
 </template>
 
@@ -23,5 +23,9 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.el-message__content {
+  font-family: Lato !important;
 }
 </style>
