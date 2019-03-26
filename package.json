@@ -17,6 +17,7 @@
     "axios": "^0.18.0",
     "element-ui": "^2.5.4",
     "express": "^4.16.4",
+    "express-sslify": "^1.2.0",
     "i": "^0.3.6",
     "node-forge": "^0.8.1",
     "npm": "^6.8.0",
