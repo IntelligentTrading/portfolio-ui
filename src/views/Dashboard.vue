@@ -1,7 +1,7 @@
 <template>
 <div style="margin:50px">
   <el-table :data="tableData" height="500px" style="width: 100%;height:100%:margin:20px">
-    <el-table-column prop="email" label="Email" width="180" sortable></el-table-column>
+    <el-table-column prop="email" label="Email" width="250" sortable></el-table-column>
     <el-table-column prop="portfolio.packs[0]" label="Portfolio" width="180" sortable></el-table-column>
     <el-table-column prop="exchanges" label="Exchanges" width="180" sortable>
         <template slot-scope="props">
