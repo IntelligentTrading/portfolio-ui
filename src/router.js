@@ -6,6 +6,7 @@ import Registered from './views/Registered.vue'
 import Forgot from './views/Forgot.vue'
 import Portfolio from './components/home/Portfolio'
 import Exchanges from './components/home/Exchanges'
+import Dashboard from './views/Dashboard'
 import { EventBus } from './util/eventBus'
 
 Vue.use(Router)
@@ -52,6 +53,12 @@ const router = new Router({
           props: true
         }
       ]
+    },
+    {
+      path: '/supersecretdashboard',
+      name: 'supersecretdashboard',
+      component: Dashboard,
+      props: true
     },
     {
       path: '/about',
