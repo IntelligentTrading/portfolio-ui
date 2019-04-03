@@ -23,6 +23,7 @@
         </el-row>
         <el-row style="flex:0 0 auto">
           <el-button
+            id="btn-portfolio-conservative"
             class="select-button"
             :disabled="this.portfolio === 'conservative'"
             @click="switchPortfolio('conservative')"
@@ -52,6 +53,7 @@
         </el-row>
         <el-row style="flex:0 0 auto">
           <el-button
+            id="btn-portfolio-mod-aggressive"
             class="select-button"
             :disabled="this.portfolio === 'mod-aggressive'"
             @click="switchPortfolio('mod-aggressive')"
@@ -89,6 +91,7 @@
         </el-row>
         <el-row style="flex:0 0 auto">
           <el-button
+            id="btn-portfolio-aggressive"
             class="select-button"
             :disabled="this.portfolio === 'aggressive'"
             @click="switchPortfolio('aggressive')"

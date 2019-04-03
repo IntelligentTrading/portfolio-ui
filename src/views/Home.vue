@@ -9,8 +9,8 @@
       >
       <div class="nav-area">
         <el-button type="text">{{ this.user.email }}</el-button>
-        <el-button type="text" @click="openFaq">FAQ</el-button>
-        <el-button type="text" @click="logout">
+        <el-button id="btn-faq" type="text" @click="openFaq">FAQ</el-button>
+        <el-button id="btn-logout" type="text" @click="logout">
           Logout
           <font-awesome-icon icon="sign-out-alt"/>
         </el-button>
@@ -44,6 +44,7 @@
                   </div>
                   <el-button
                     circle
+                    id="btn-portfolio-refresh"
                     class="action-button"
                     @click="refresh"
                     :loading="this.refreshingPortfolio"
@@ -58,6 +59,7 @@
                   </div>
                   <el-button
                     circle
+                    id="btn-portfolio-rebalancing"
                     class="action-button"
                     :loading="this.rebalancing"
                     @click="rebalance"

@@ -2,6 +2,7 @@
   <div>
     <label>Welcome</label>
     <el-button
+      id="btn-get-started"
       type="text"
       @click="this.$router.push('/auth')"
       v-show="!this.success"

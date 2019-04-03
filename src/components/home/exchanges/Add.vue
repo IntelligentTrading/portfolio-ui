@@ -27,7 +27,7 @@
         <i slot="suffix" @click="showPassword('secret')" class="el-input__icon el-icon-view"></i>
       </el-input>
 
-      <el-button class="dialog-confirm-button" :disabled="!this.isValidExchange" @click="add">SAVE</el-button>
+      <el-button id="btn-save-exchange" class="dialog-confirm-button" :disabled="!this.isValidExchange" @click="add">SAVE</el-button>
     </div>
   </div>
 </template>

@@ -15,7 +15,7 @@
         <div class="single-balance">BTC {{ this.amount }}</div>
       </el-col>
       <el-col :span="4">
-        <el-button type="text" @click="showEditDialog = true">Edit</el-button>
+        <el-button id="btn-edit-exchange" type="text" @click="showEditDialog = true">Edit</el-button>
         <el-dialog :visible.sync="showEditDialog" width="40%">
           <div class="dialog-title" slot="title">{{ "Edit " + this.exchangeName + " Account" }}</div>
           <edit :exchangeData="this.$props.exchangeData" v-on:updated="showEditDialog = false"></edit>

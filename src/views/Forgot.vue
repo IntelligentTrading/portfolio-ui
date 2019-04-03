@@ -11,6 +11,7 @@
         placeholder="Email address"
       ></el-input>
       <el-button
+        id="btn-forgot-password"
         type="primary"
         class="auth-button"
         :disabled="email == ''"

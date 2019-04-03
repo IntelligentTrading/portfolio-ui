@@ -52,6 +52,7 @@
     </el-form-item>
     <el-form-item>
       <el-button
+        id="btn-register"
         type="primary"
         class="auth-button"
         @click="register"

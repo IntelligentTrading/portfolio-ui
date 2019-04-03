@@ -7,7 +7,7 @@
     <el-row :gutter="24">
       <el-col :span="12" style="text-align:left">
         <label class="portfolio-strategy">{{ this.portfolioLabel }}</label>
-        <el-button type="text" icon="el-icon-setting" @click="showPortfolios = true">CHANGE</el-button>
+        <el-button id="btn-change-portfolio" type="text" icon="el-icon-setting" @click="showPortfolios = true">CHANGE</el-button>
       </el-col>
       <el-col :span="12" style="text-align:right">
         <el-switch v-model="autorebalance" active-color="#13ce66" active-text="Rebalance Automatically" @change="toggleAutorebalancing()"></el-switch>

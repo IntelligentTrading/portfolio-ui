@@ -22,6 +22,7 @@
         <i slot="suffix" @click="showPassword('secret')" class="el-input__icon el-icon-view"></i>
       </el-input>
       <el-button
+        id="btn-reset-exchange"
         class="dialog-confirm-button"
         :disabled="!this.isValidExchange"
         :loading="this.isSaving"
@@ -29,7 +30,7 @@
       >RESET</el-button>
 
       <div class="delete-div">
-        <el-button class="dialog-delete-button" @click="del" :loading="this.isDeleting">REMOVE</el-button>
+        <el-button id="btn-remove-exchange" class="dialog-delete-button" @click="del" :loading="this.isDeleting">REMOVE</el-button>
       </div>
     </div>
   </div>

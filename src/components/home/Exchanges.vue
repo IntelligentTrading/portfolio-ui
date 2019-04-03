@@ -9,7 +9,7 @@
         <label>Your exchanges</label>
       </el-col>
       <el-col :span="4" style="text-align:right">
-        <el-button type="text" icon="el-icon-plus" @click="showAddNewExchange = true">ADD EXCHANGE</el-button>
+        <el-button type="text" id="btn-add-exchange" icon="el-icon-plus" @click="showAddNewExchange = true">ADD EXCHANGE</el-button>
       </el-col>
     </el-row>
     <el-row id="exchanges-data-container">

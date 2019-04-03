@@ -1,10 +1,5 @@
 <template>
-  <el-form
-    class="login-card"
-    :model="registerForm"
-    status-icon
-    ref="registerForm"
-  >
+  <el-form class="login-card" :model="registerForm" status-icon ref="registerForm">
     <label class="auth-title">Reset Password</label>
     <el-form-item
       prop="pass"
@@ -36,13 +31,13 @@
     </el-form-item>
     <el-form-item>
       <el-button
+        id="btn-reset-password"
         type="primary"
         class="auth-button"
         @click="register"
         :disabled="!completed"
         :loading="isLoading"
-        >Reset Password</el-button
-      >
+      >Reset Password</el-button>
     </el-form-item>
   </el-form>
 </template>
