@@ -3,7 +3,6 @@
     <router-view/>
   </div>
 </template>
-
 <style>
 #app {
   font-family: "Lato";
@@ -29,7 +28,7 @@
   font-family: Lato !important;
 }
 
-.el-button span{
+.el-button span {
   pointer-events: none;
 }
 </style>

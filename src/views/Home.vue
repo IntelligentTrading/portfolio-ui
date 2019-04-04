@@ -22,7 +22,7 @@
           <div style="display:flex;flex-direction:column">
             <el-row :gutter="24">
               <el-col :span="18" style="text-align:left">
-                <label class="balance">
+                <label id="balance-label" class="balance">
                   <span style="font-size:21px">BTC</span>
                   <span v-show="!this.refreshingPortfolio">
                     {{
@@ -87,13 +87,16 @@
               mode="horizontal"
             >
               <el-menu-item index="1" @click="to('/home/portfolio')">Portfolio</el-menu-item>
-              <el-menu-item v-popover:popover index="2" @click="to('/home/exchange')">Exchange</el-menu-item>
+              <el-menu-item index="2" @click="to('/home/exchange')">
+                <div id="exchange-tab">Exchange</div>
+              </el-menu-item>
             </el-menu>
             <router-view></router-view>
           </div>
         </el-row>
       </el-col>
     </el-row>
+    <v-tour name="welcomeTour" :steps="steps"></v-tour>
   </div>
 </template>
 
@@ -112,7 +115,33 @@ export default {
       currentTabIndex: "1",
       rebalancing: false,
       rebalancingStatus: {},
-      timer: null
+      timer: null,
+      steps: [
+        {
+          target: "#balance-label",
+          content:
+            "<b>Portfolio balance</b><br>Keep track of your total portfolio balance.",
+          params: {
+            placement: "bottom"
+          }
+        },
+        {
+          target: "#exchange-tab",
+          content:
+            "<b>Before starting</b><br><br>Set an exchange to start rebalancing.<br>You relax, our tool works for you.",
+          params: {
+            placement: "right"
+          }
+        },
+        {
+          target: "#btn-add-exchange",
+          content:
+            "<b>Before starting</b><br><br>Click to link your exchange account. Check the <a href='https://intelligenttrading.org/faq/' target='_blank'>FAQ</a> for a detailed HOWTO.",
+          params: {
+            placement: "left"
+          }
+        }
+      ]
     };
   },
   components: { Loader },
@@ -196,6 +225,7 @@ export default {
     },
     logout: function() {
       localStorage.clear();
+      this.$tours["myTour"].stop();
       this.$router.push("/");
     }
   },
@@ -218,6 +248,8 @@ export default {
 
     if (!this.user.exchanges || this.user.exchanges.length <= 0)
       this.to("/home/exchange");
+
+    this.$tours["welcomeTour"].start();
   }
 };
 

@@ -4,6 +4,8 @@ import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
 import VueFrappe from 'vue2-frappe'
+import VueTour from 'vue-tour'
+import 'vue-tour/dist/vue-tour.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -29,6 +31,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(VueFrappe)
+Vue.use(VueTour)
 
 const vm = new Vue({
   router,
