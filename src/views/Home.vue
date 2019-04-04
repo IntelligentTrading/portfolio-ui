@@ -49,7 +49,11 @@
                     @click="refresh"
                     :loading="this.refreshingPortfolio"
                   >
-                    <font-awesome-icon icon="sync-alt" v-show="!this.refreshingPortfolio"/>
+                    <font-awesome-icon
+                      id="test-gtm"
+                      icon="sync-alt"
+                      v-show="!this.refreshingPortfolio"
+                    />
                   </el-button>
                 </el-tooltip>
 
@@ -79,11 +83,11 @@
             ></el-alert>
             <el-menu
               style="margin-top:20px"
-              :default-active="this.currentTabIndex"
+              :default-active="!this.user.exchanges ||this.user.exchanges.length <= 0 ? '2' : this.currentTabIndex"
               mode="horizontal"
             >
               <el-menu-item index="1" @click="to('/home/portfolio')">Portfolio</el-menu-item>
-              <el-menu-item index="2" @click="to('/home/exchange')">Exchange</el-menu-item>
+              <el-menu-item v-popover:popover index="2" @click="to('/home/exchange')">Exchange</el-menu-item>
             </el-menu>
             <router-view></router-view>
           </div>
@@ -113,7 +117,11 @@ export default {
   },
   components: { Loader },
   computed: {
-    ...mapState(["totalBalance", "user", "portfolio", "distribution", "error"])
+    ...mapState(["totalBalance", "user", "portfolio", "distribution", "error"]),
+    showMissingExchangePopover: function() {
+      if (!this.user) return false;
+      return !this.user.exchanges || this.user.exchanges.length <= 0;
+    }
   },
   methods: {
     ...mapMutations(["setUser", "cleanup"]),
@@ -202,11 +210,14 @@ export default {
     });
 
     EventBus.$on("settingsChanged", () => {
-      this.rebalance()
+      this.rebalance();
     });
 
     this.reloadUser();
     this.refresh();
+
+    if (!this.user.exchanges || this.user.exchanges.length <= 0)
+      this.to("/home/exchange");
   }
 };
 

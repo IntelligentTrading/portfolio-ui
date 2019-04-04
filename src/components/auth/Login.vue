@@ -14,7 +14,7 @@
       <el-input type="password" placeholder="password" v-model="loginForm.pass" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item style="text-align:right">
-      <label
+      <label id='forgot-password'
         @click="forgotPassword"
         style="font-weight:600;color:cornflowerblue;cursor:pointer;"
       >I forgot my password</label>
@@ -79,4 +79,6 @@ export default {
   }
 };
 </script>
-<style></style>
+<style>
+
+</style>

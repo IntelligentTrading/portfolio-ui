@@ -17,7 +17,7 @@
             @click="switchView"
           >
             Not a member?
-            <span class="clickable-label">
+            <span class="clickable-label" id="create-account">
               <u>Create an account.</u>
             </span>
           </label>
@@ -26,7 +26,7 @@
             @click="switchView"
           >
             Already a member?
-            <span class="clickable-label">
+            <span class="clickable-label" id="already-member">
               <u>Login.</u>
             </span>
           </label>

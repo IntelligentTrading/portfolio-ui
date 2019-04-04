@@ -28,4 +28,8 @@
 .el-message__content {
   font-family: Lato !important;
 }
+
+.el-button span{
+  pointer-events: none;
+}
 </style>
