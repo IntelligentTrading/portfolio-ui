@@ -120,7 +120,7 @@ export default {
         {
           target: "#balance-label",
           content:
-            "<b>Portfolio balance</b><br>Keep track of your total portfolio balance.",
+            "<b>Portfolio balance</b><br><br>This is the total value of your portfolio..",
           params: {
             placement: "bottom"
           }
@@ -128,7 +128,7 @@ export default {
         {
           target: "#exchange-tab",
           content:
-            "<b>Before starting</b><br><br>Set an exchange to start rebalancing.<br>You relax, our tool works for you.",
+            "<b>Manage Exchange</b><br><br>Where you can connect and edit exchanges connected to this portfolio.",
           params: {
             placement: "right"
           }
@@ -136,7 +136,7 @@ export default {
         {
           target: "#btn-add-exchange",
           content:
-            "<b>Before starting</b><br><br>Click to link your exchange account. Check the <a href='https://intelligenttrading.org/faq/' target='_blank'>FAQ</a> for a detailed HOWTO.",
+            "<b>Add an Exchange</b><br><br>Click here to connect an exchange to your portfolio.  This will show the holdings that you have on your exchange, in ITF Portfolios.<br><br>Check the <a href='https://intelligenttrading.org/faq/' target='_blank'>FAQ</a> for a detailed HOWhow-to.",
           params: {
             placement: "left"
           }
@@ -246,10 +246,13 @@ export default {
     this.reloadUser();
     this.refresh();
 
-    if (!this.user.exchanges || this.user.exchanges.length <= 0)
+    if (!this.user.exchanges || this.user.exchanges.length <= 0) {
       this.to("/home/exchange");
-
-    this.$tours["welcomeTour"].start();
+    }
+    setTimeout(() => {
+      if (!this.user.exchanges || this.user.exchanges.length <= 0)
+        this.$tours["welcomeTour"].start();
+    }, 5000);
   }
 };
 

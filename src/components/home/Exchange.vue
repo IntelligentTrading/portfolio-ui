@@ -7,7 +7,7 @@
         </div>
       </el-col>
       <el-col :span="4">
-        <img :src="this.exchangeIcon">
+        <img :src="this.exchangeIcon" style="width:32px">
       </el-col>
     </el-row>
     <el-row :gutter="24">

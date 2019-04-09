@@ -19,7 +19,6 @@ export default {
     };
   },
   mounted() {
-    console.log("ok");
     return api.confirm(this.$props.signupToken).then(result => {
       this.success = result.status == 200;
     });
