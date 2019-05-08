@@ -1,10 +1,10 @@
 <template>
-  <div style="height:500px">
-    <el-row :gutter="24" style="height:100%;display:flex;justify-content:center">
+  <div style="height:550px">
+    <el-row :gutter="24" style="height:80%;display:flex;justify-content:center">
       <el-col :span="8" class="portfolio-type-container">
         <el-row
           class="portfolio-type"
-          :class="this.portfolio === 'conservative' ? 'selected-portfolio':''"
+          :class="this.portfolio === 'conservative' && (this.user.portfolio.custom == null || this.user.portfolio.custom.length===0) ? 'selected-portfolio':''"
         >Conservative</el-row>
         <el-row class="portfolio-distribution">
           <vue-frappe
@@ -25,7 +25,7 @@
           <el-button
             id="btn-portfolio-conservative"
             class="select-button"
-            :disabled="this.portfolio === 'conservative'"
+            :disabled="this.portfolio === 'conservative' && (this.user.portfolio.custom == null || this.user.portfolio.custom.length===0)"
             @click="switchPortfolio('conservative')"
           >Select</el-button>
         </el-row>
@@ -34,7 +34,7 @@
       <el-col :span="8" class="portfolio-type-container">
         <el-row
           class="portfolio-type"
-          :class="this.portfolio === 'mod-aggressive' ? 'selected-portfolio':''"
+          :class="this.portfolio === 'mod-aggressive'&& (this.user.portfolio.custom == null || this.user.portfolio.custom.length===0) ? 'selected-portfolio':''"
         >Moderately Aggressive</el-row>
         <el-row class="portfolio-distribution">
           <vue-frappe
@@ -55,7 +55,7 @@
           <el-button
             id="btn-portfolio-mod-aggressive"
             class="select-button"
-            :disabled="this.portfolio === 'mod-aggressive'"
+            :disabled="this.portfolio === 'mod-aggressive'&& (this.user.portfolio.custom == null || this.user.portfolio.custom.length===0)"
             @click="switchPortfolio('mod-aggressive')"
           >Select</el-button>
         </el-row>
@@ -63,7 +63,7 @@
       <el-col
         :span="8"
         class="portfolio-type-container"
-        :class="this.portfolio === 'aggressive' ? 'selected-portfolio':''"
+        :class="this.portfolio === 'aggressive' && (this.user.portfolio.custom == null || this.user.portfolio.custom.length===0)? 'selected-portfolio':''"
       >
         <el-row class="portfolio-type">Aggressive</el-row>
         <el-row class="portfolio-distribution">
@@ -93,11 +93,17 @@
           <el-button
             id="btn-portfolio-aggressive"
             class="select-button"
-            :disabled="this.portfolio === 'aggressive'"
+            :disabled="this.portfolio === 'aggressive'&& (this.user.portfolio.custom == null || this.user.portfolio.custom.length===0)"
             @click="switchPortfolio('aggressive')"
           >Select</el-button>
         </el-row>
       </el-col>
+    </el-row>
+    <el-row style="margin-top:35px; font-family:Lato; font-size:16px">
+      <label>Not exactly what you need? Create your own allocation!</label>
+    </el-row>
+    <el-row style="margin:5px">
+      <el-button class="select-button" @click="customSelection">Customize</el-button>
     </el-row>
   </div>
 </template>
@@ -109,10 +115,13 @@ import { EventBus } from "../../util/eventBus";
 
 export default {
   computed: {
-    ...mapState(["portfolio"])
+    ...mapState(["portfolio", "user"])
   },
   methods: {
     ...mapMutations(["setPortfolio"]),
+    customSelection: function() {
+      EventBus.$emit("customSelected");
+    },
     switchPortfolio: function(packLabel) {
       this.$confirm(
         `This will automatically change your holdings to the selected portfolio. Continue?`,

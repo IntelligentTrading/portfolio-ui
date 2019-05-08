@@ -179,6 +179,7 @@ export default {
             "is scheduled, if nothing happens try again in 20 minutes.";
           let type = "warning";
           if (
+            payload.response &&
             payload.response.data &&
             payload.response.data.includes("API-key")
           ) {
