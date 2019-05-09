@@ -21,6 +21,9 @@
     </el-row>
     <el-row :gutter="24">
       <el-col :offset="4" :span="16">
+        <el-row class="balance-text">
+          <label>Total amount for all linked exchanges</label>
+        </el-row>
         <el-row>
           <div style="display:flex;flex-direction:column">
             <el-row :gutter="24">
@@ -30,13 +33,12 @@
                   <span v-show="!this.refreshingPortfolio">
                     {{
                     this.totalBalance
-                    }} / <span style="font-size:21px">USD </span>{{(this.totalBalance * this.usdRate).toFixed(2)}}
+                    }} /
+                    <span
+                      style="font-size:21px"
+                    >USD</span>
+                    {{(this.totalBalance * this.usdRate).toFixed(2)}}
                   </span>
-                  <el-tag
-                    style="margin-left:20px;font-family:Lato"
-                    v-show="this.rebalancingStatus.status != null"
-                    :type="this.rebalancingStatus.type"
-                  >Rebalancing {{ this.rebalancingStatus.status }}</el-tag>
                 </label>
                 <loader style="margin:10px" v-show="this.refreshingPortfolio"></loader>
               </el-col>
@@ -76,7 +78,13 @@
                 </el-tooltip>
               </el-col>
             </el-row>
-            <label class="balance-text">Total amount for all linked exchanges</label>
+            <el-row style="text-align:left">
+              <el-tag
+                style="font-family:Lato"
+                v-show="this.rebalancingStatus.status != null"
+                :type="this.rebalancingStatus.type"
+              >Rebalancing {{ this.rebalancingStatus.status }}</el-tag>
+            </el-row>
             <el-alert
               style="margin-top:10px"
               :title="this.error"
@@ -302,6 +310,7 @@ function extractRebalancingStatus(message) {
 
 .balance-text {
   text-align: left;
+  text-align: -webkit-left;
   font-size: 14px;
   color: gray;
   font-family: "Lato";
