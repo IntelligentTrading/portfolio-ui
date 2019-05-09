@@ -10,6 +10,7 @@
       <div class="nav-area">
         <el-button type="text">{{ this.user.email }}</el-button>
         <el-button id="btn-faq" type="text" @click="openFaq">FAQ</el-button>
+        <el-button id="btn-pro" type="text" @click="openPremium"><b>⭐️Premium</b></el-button>
         <el-button id="btn-logout" type="text" @click="logout">
           Logout
           <font-awesome-icon icon="sign-out-alt"/>
@@ -157,6 +158,12 @@ export default {
     ...mapActions(["refreshPortfolio", "refreshUser"]),
     openFaq: function() {
       window.open("https://intelligenttrading.org/faq/", "_blank");
+    },
+    openPremium: function() {
+      window.open(
+        "https://intelligenttrading.org/guides/bot-user-guide/#premium-subscriptions",
+        "_blank"
+      );
     },
     to: function(url) {
       this.$router.push(url);
