@@ -10,7 +10,9 @@
       <div class="nav-area">
         <el-button type="text">{{ this.user.email }}</el-button>
         <el-button id="btn-faq" type="text" @click="openFaq">FAQ</el-button>
-        <el-button id="btn-pro" type="text" @click="openPremium"><b>⭐️Premium</b></el-button>
+        <el-button id="btn-pro" type="text" @click="openPremium">
+          <b>⭐️Premium</b>
+        </el-button>
         <el-button id="btn-logout" type="text" @click="logout">
           Logout
           <font-awesome-icon icon="sign-out-alt"/>
@@ -28,7 +30,7 @@
                   <span v-show="!this.refreshingPortfolio">
                     {{
                     this.totalBalance
-                    }}
+                    }} / <span style="font-size:21px">USD </span>{{(this.totalBalance * this.usdRate).toFixed(2)}}
                   </span>
                   <el-tag
                     style="margin-left:20px;font-family:Lato"
@@ -107,6 +109,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import { EventBus } from "../util/eventBus";
 import api from "../api/client";
 import Loader from "../components/others/Loader";
+import client from "../api/client";
 
 export default {
   name: "home",
@@ -117,6 +120,7 @@ export default {
       rebalancing: false,
       rebalancingStatus: {},
       timer: null,
+      usdRate: 0,
       steps: [
         {
           target: "#balance-label",
@@ -197,9 +201,16 @@ export default {
           this.rebalancing = false;
         });
     },
+    refreshUsdRate: function() {
+      return client.rate().then(rate => {
+        this.usdRate = rate.data;
+      });
+    },
     refresh: function() {
       this.refreshingPortfolio = true;
       this.rebalancingStatus = {};
+
+      this.refreshUsdRate();
 
       return this.refreshPortfolio(localStorage["userId"])
         .then(() => {
@@ -253,6 +264,7 @@ export default {
 
     this.reloadUser();
     this.refresh();
+    this.refreshUsdRate();
 
     if (!this.user.exchanges || this.user.exchanges.length <= 0) {
       this.to("/home/exchange");

@@ -77,7 +77,7 @@ const client = {
       });
   },
   setCustomPack: (id, custom) => {
-    console.log(custom)
+    console.log(custom);
     return axiosInstance
       .put(
         `${apiurl}/users/${id}/packs/custom`,
@@ -106,6 +106,13 @@ const client = {
   currencies: () => {
     return axiosInstance
       .get(`${apiurl}/currencies/all`, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      })
+      .catch(err => handleUnauthorized(err));
+  },
+  rate: () => {
+    return axiosInstance
+      .get(`${apiurl}/currencies/rate/BTC_USD`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .catch(err => handleUnauthorized(err));
