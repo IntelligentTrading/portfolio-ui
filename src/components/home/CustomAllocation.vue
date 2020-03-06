@@ -2,24 +2,23 @@
   <el-card style="width:250px;padding:10px">
     <el-row :gutter="24">
       <el-col style="text-align:left" :span="18">
-        <span>{{this.$props.allocation.coin}}</span>
+        <span>{{ this.$props.allocation.coin }}</span>
       </el-col>
       <el-col :span="4">
-        <img :src="icon">
+        <img :src="icon" />
       </el-col>
     </el-row>
     <el-row :gutter="24">
       <el-col :span="20">
         <el-slider v-model="alloc.portion" @change="updatePortion"></el-slider>
       </el-col>
-      <el-col :span="3" style='padding-top:10px'>
-        <label>{{alloc.portion}}%</label>
+      <el-col :span="3" style="padding-top:10px">
+        <label>{{ alloc.portion }}%</label>
       </el-col>
     </el-row>
   </el-card>
 </template>
 
-            
 <script>
 import { EventBus } from "../../util/eventBus";
 
@@ -49,6 +48,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
-        
+<style></style>

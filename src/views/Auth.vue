@@ -1,10 +1,27 @@
 <template>
   <div>
+    <el-drawer
+      :visible.sync="drawer"
+      :direction="direction"
+      :before-close="handleClose"
+    >
+      <span style="text-align:left">
+        Intelligent Trading Foundation (ITF) is no longer in a position to
+        continue active development of our full suite of products.
+        <br />However, our products will remain online and available for our
+        users as long as possible. See more information
+        <a
+          href="https://intelligenttrading.org/itf-community-update-sep-2019"
+          style="color:white;font-weight:800"
+          >here</a
+        >
+      </span>
+    </el-drawer>
     <img
       style="position: absolute;left: 0;margin: 20px;"
       width="52"
       src="https://intelligenttrading.org/wp-content/themes/intelligent-trading/assets/img/icons/apple-touch-icon-72x72.png"
-    >
+    />
     <el-row :gutter="24" class="login-container">
       <el-col class="login-form" :span="24">
         <div class="login-card-div">
@@ -46,7 +63,9 @@ export default {
   data() {
     return {
       authComponents: [Login, Register],
-      authComponentsIdx: 0
+      authComponentsIdx: 0,
+      drawer: true,
+      direction: "ttb"
     };
   },
   methods: {
@@ -75,6 +94,17 @@ export default {
 </script>
 
 <style>
+.el-drawer {
+  background: linear-gradient(45deg, #8578f5 0, #457cf2 100%);
+  color: whitesmoke;
+  height: 100px !important;
+}
+
+#el-drawer__title {
+  margin: 0px;
+  padding: 0px;
+}
+
 .login-card {
   display: flex;
   flex-direction: column;
